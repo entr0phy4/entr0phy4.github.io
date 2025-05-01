@@ -213,7 +213,7 @@ export default async function About() {
         </StatList>
       </Container>
 
-      <Culture />
+      {/* <Culture /> */}
 
       {/* <Team /> */}
 
@@ -224,7 +224,7 @@ export default async function About() {
       {/*   pages={blogArticles} */}
       {/* /> */}
 
-      <ContactSection />
+      {/* <ContactSection /> */}
     </>
   )
 }

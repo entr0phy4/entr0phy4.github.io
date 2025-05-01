@@ -53,7 +53,7 @@ export default async function BlogArticleWrapper({
         />
       )}
 
-      <ContactSection />
+      {/* <ContactSection /> */}
     </>
   )
 }
