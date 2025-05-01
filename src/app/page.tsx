@@ -171,8 +171,8 @@ function Services() {
 }
 
 export const metadata: Metadata = {
-  description:
-    'We are a development studio working at the intersection of design and technology.',
+  title: 'Blog | David Agámez',
+  description: 'Software engineering from Colombia',
 }
 
 export default async function Home() {
@@ -182,8 +182,8 @@ export default async function Home() {
     <>
       <Container className="mt-24 flex sm:mt-32 md:mt-56">
         <FadeIn className="max-w-3xl">
-          <p className="text-xl font-bold text-white">David Agámez AKA</p>
-          <h1 className="font-display text-7xl font-black tracking-tight [text-wrap:balance] text-[#00FF00] uppercase sm:text-7xl">
+          <p className="font-bold text-white lg:text-xl">David Agámez AKA</p>
+          <h1 className="font-display text-5xl font-black tracking-tight [text-wrap:balance] text-[#00FF00] uppercase sm:text-7xl lg:text-7xl">
             Entr0phy4
           </h1>
           <p className="mt-6 text-xl text-white">
