@@ -22,8 +22,11 @@ export default async function Blog() {
 
   return (
     <>
-      <PageIntro eyebrow="Blog" title="The latest articles and news">
-        <p>Stay up-to-date with the latest.</p>
+      <PageIntro eyebrow="Blog" title="From my desk: Recent Posts & Ideas">
+        <p>
+          A collection of personal insights, lessons, and updates—straight from
+          my journey.
+        </p>
       </PageIntro>
 
       <Container className="mt-24 sm:mt-32 lg:mt-40">
@@ -80,7 +83,7 @@ export default async function Blog() {
         </div>
       </Container>
 
-      <ContactSection />
+      {/* <ContactSection /> */}
     </>
   )
 }
