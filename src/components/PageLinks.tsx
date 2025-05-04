@@ -34,19 +34,14 @@ function PageLink({ page }: { page: Page }) {
         position="left"
         className="relative flex flex-col items-start pl-8"
       >
-        <h3 className="mt-6 text-base font-semibold text-neutral-950">
-          {page.title}
-        </h3>
-        <time
-          dateTime={page.date}
-          className="order-first text-sm text-neutral-600"
-        >
+        <h3 className="mt-6 text-base font-bold text-white">{page.title}</h3>
+        <time dateTime={page.date} className="order-first text-sm text-black">
           {formatDate(page.date)}
         </time>
-        <p className="mt-2.5 text-base text-neutral-600">{page.description}</p>
+        <p className="mt-2.5 text-base text-white">{page.description}</p>
         <Link
           href={page.href}
-          className="mt-6 flex gap-x-3 text-base font-semibold text-neutral-950 transition hover:text-neutral-700"
+          className="mt-6 flex gap-x-3 text-base font-bold text-neutral-100/50 transition hover:text-white"
           aria-label={`Read more: ${page.title}`}
         >
           Read more
@@ -71,9 +66,9 @@ export function PageLinks({
 }) {
   return (
     <div className={clsx('relative pt-24 sm:pt-32 lg:pt-40', className)}>
-      <div className="absolute inset-x-0 top-0 -z-10 h-[884px] overflow-hidden rounded-t-4xl bg-linear-to-b from-neutral-50">
+      <div className="absolute inset-x-0 top-0 -z-10 h-[884px] overflow-hidden rounded-t-4xl bg-linear-to-b from-[#00ff00]">
         <GridPattern
-          className="absolute inset-0 h-full w-full fill-neutral-100 stroke-neutral-950/5 [mask-image:linear-gradient(to_bottom_left,white_40%,transparent_50%)]"
+          className="absolute inset-0 h-full w-full [mask-image:linear-gradient(to_bottom_left,white_40%,transparent_50%)] fill-black stroke-neutral-950/5"
           yOffset={-270}
         />
       </div>
