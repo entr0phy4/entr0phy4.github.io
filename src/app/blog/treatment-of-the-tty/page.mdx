@@ -1,0 +1,95 @@
+export const article = {
+  date: '2025-05-03',
+  title: 'Teletype Treatment',
+  description: 'Upgrade simple shell to fully interactive TTY.',
+  author: {
+    name: '@Entr0phy4 (David Agámez)',
+    role: 'Software engineering',
+  },
+}
+
+export const metadata = {
+  title: article.title,
+  description: article.description,
+}
+
+### **Introduction**
+
+After compromising a system, one of the first goals is often to upgrade your shell to a fully interactive TTY session. A simple shell, such as those provided by a reverse shell or a basic command execution, may not offer all the functionality needed for an effective post-exploitation scenario. Upgrading to a fully interactive terminal allows attackers or penetration testers to regain control over their session and effectively interact with the compromised system, just as they would in a local terminal environment.
+
+This article covers the **step-by-step process** to achieve this upgrade and describes the necessary commands and techniques to turn a simple shell into a fully interactive TTY, commonly done after establishing a foothold in a vulnerable system.
+
+### **The Need for an Interactive TTY Shell**
+
+After exploiting a vulnerability and gaining access to a compromised system, the shell might be limited in its functionality. Common limitations include:
+
+- **No terminal features**: The shell might not support interactive features such as backspace, arrow keys, or command history.
+- **Job control limitations**: The shell might not allow you to run processes in the background or suspend processes with `Ctrl+Z`.
+- **No proper input/output handling**: Characters might not appear as you type them, or input may not be echoed back to you, making interaction difficult.
+
+By upgrading to a fully interactive TTY session, we address these limitations and allow for smoother, more effective interaction with the system.
+
+### **Steps to Upgrade to an Interactive TTY**
+
+**1. Create a Pseudo-Terminal Using `script` (Optional)**
+
+Another useful technique to upgrade a shell is to use the script command to emulate a fully interactive terminal environment. This command is often used to record terminal sessions, but it can also be employed to create a pseudo-terminal session in a compromised system, giving the attacker a much more responsive shell.
+
+Here’s how you can do it:
+
+```bash
+script /dev/null -c bash
+```
+
+- `script`: The command used to start a new shell session that logs everything to a file or to the terminal.
+
+- `/dev/null`: Directs the output of the script command to null, so it doesn't actually save the session. It’s just used here to create the pseudo-terminal.
+
+- `-c bash`: Runs the bash shell inside the script session.
+
+This command starts a new Bash shell, but inside a pseudo-terminal that has full interactivity (e.g., support for job control, Ctrl+Z, Ctrl+C, and other terminal features).
+
+**2. Suspend the Current Process Using `Ctrl+Z`**
+
+The first step is to suspend the current non-interactive shell process. This is typically done by sending the `SIGTSTP` signal (via `Ctrl+Z`), which pauses the process and places it in the background. This allows you to modify the environment or restore it in a more controlled manner.
+
+Example:
+
+```bash
+^Z  # Press Ctrl+Z to suspend the process
+[1]+ 1234 suspended  nc -nlvp 9001
+```
+
+**3. Modify the Terminal Settings Using `stty`**
+
+The next step is to configure the terminal settings to enable interactive features such as raw input, no character echoing, and immediate processing of typed characters. This can be achieved by using the stty command:
+
+```bash
+stty raw -echo
+```
+
+- `raw`: Disables canonical mode, meaning input is processed immediately as you type it, without waiting for a newline.
+
+- `-echo`: Disables character echoing, so characters typed won't be displayed on the screen (common for non-interactive shells).
+
+**4. Bring the Process Back to the Foreground Using `fg`**
+
+Now that the terminal has been configured for better interaction, you can bring the suspended process back into the foreground using the fg command. This will resume the shell and allow you to interact with it as if it were a fully interactive terminal.
+
+```bash
+fg  # Bring the process back to the foreground
+```
+
+At this point, you should have a fully interactive terminal session, allowing for advanced features such as editing input, running background jobs, and using terminal shortcuts like Ctrl+C and Ctrl+Z.
+
+### Post-Exploitation Benefits of an Interactive TTY
+
+Once the shell is upgraded to an interactive TTY, the attacker or penetration tester gains several advantages:
+
+- _Improved User Experience_: With full terminal interaction, the attacker can navigate the system more efficiently and effectively. This includes the ability to use commands like history, clear, and Ctrl+R for searching previous commands.
+
+- _Job Control_: The ability to use Ctrl+Z to suspend processes and bg to send them to the background enhances flexibility when running multiple commands or tools simultaneously.
+
+- _Signal Handling_: Signals like SIGINT (Ctrl+C) and SIGTSTP (Ctrl+Z) can be used as expected, allowing for better control over processes and more natural interactions.
+
+- _Terminal Features_: Features such as tab completion, line editing, and scrolling through previous commands make the post-exploitation phase much smoother.
