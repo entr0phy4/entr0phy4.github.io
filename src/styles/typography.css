@@ -110,7 +110,7 @@
   :where(pre) {
     display: flex;
     background-color: var(--color-neutral-950);
-    border-radius: var(--radius-4xl);
+    border-radius: var(--radius-xl);
     overflow-x: auto;
     margin-top: --spacing(10);
     margin-bottom: --spacing(10);
