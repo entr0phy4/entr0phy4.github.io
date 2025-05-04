@@ -15,6 +15,9 @@ import { unifiedConditional } from 'unified-conditional'
 const nextConfig = {
   output: 'export',
   distDir: 'dist',
+  images: {
+    unoptimized: true,
+  },
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'mdx'],
 }
 
