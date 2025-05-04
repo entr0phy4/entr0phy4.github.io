@@ -6,27 +6,27 @@ import { Logo } from '@/components/Logo'
 import { socialMediaProfiles } from '@/components/SocialMedia'
 
 const navigation = [
-  {
-    title: 'Work',
-    links: [
-      { title: 'Devzeros S.A.S', href: '/work/family-fund' },
-      // {
-      //   title: (
-      //     <>
-      //       See all <span aria-hidden="true">&rarr;</span>
-      //     </>
-      //   ),
-      //   href: '/work',
-      // },
-    ],
-  },
+  // {
+  //   title: 'Work',
+  //   links: [
+  // { title: 'Devzeros S.A.S', href: '/work/family-fund' },
+  // {
+  //   title: (
+  //     <>
+  //       See all <span aria-hidden="true">&rarr;</span>
+  //     </>
+  //   ),
+  //   href: '/work',
+  // },
+  // ],
+  // },
   {
     title: 'Content',
     links: [
       { title: 'About', href: '/about' },
-      { title: 'Process', href: '/process' },
+      // { title: 'Process', href: '/process' },
       { title: 'Blog', href: '/blog' },
-      { title: 'Contact us', href: '/contact' },
+      // { title: 'Contact us', href: '/contact' },
     ],
   },
   {
@@ -114,9 +114,9 @@ export function Footer() {
       <FadeIn>
         <div className="grid grid-cols-1 gap-x-8 gap-y-16 lg:grid-cols-2">
           <Navigation />
-          <div className="flex lg:justify-end">
-            <NewsletterForm />
-          </div>
+          {/* <div className="flex lg:justify-end"> */}
+          {/*   <NewsletterForm /> */}
+          {/* </div> */}
         </div>
         <div className="mt-24 mb-20 flex flex-wrap items-end justify-between gap-x-6 gap-y-4 border-t border-neutral-950/10 pt-12">
           <div></div>
