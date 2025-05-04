@@ -23,6 +23,7 @@ const navigation = [
   {
     title: 'Content',
     links: [
+      { title: 'home', href: '/' },
       { title: 'About', href: '/about' },
       // { title: 'Process', href: '/process' },
       { title: 'Blog', href: '/blog' },
