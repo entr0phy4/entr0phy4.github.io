@@ -23,14 +23,19 @@ const nextConfig = {
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'mdx'],
 }
 
-function remarkMDXLayout(source, metaName) {
+function remarkMDXLayout(source, props = {}) {
   let parser = Parser.extend(jsx())
   let parseOptions = { ecmaVersion: 'latest', sourceType: 'module' }
 
   return (tree) => {
     let imp = `import _Layout from '${source}'`
+
+    let propsString = Object.entries(props)
+      .map(([key, value]) => `${key}={${value}}`)
+      .join(' ')
+
     let exp = `export default function Layout(props) {
-      return <_Layout {...props} ${metaName}={${metaName}} />
+      return <_Layout {...props} ${propsString} />
     }`
 
     tree.children.push(
@@ -76,7 +81,13 @@ export default async function config() {
           unifiedConditional,
           [
             new RegExp(`^${escapeStringRegexp(path.resolve('src/app/blog'))}`),
-            [[remarkMDXLayout, '@/app/blog/wrapper', 'article']],
+            [
+              [
+                remarkMDXLayout,
+                '@/app/blog/wrapper',
+                { article: 'article', sections: 'sections' },
+              ],
+            ],
           ],
           [
             new RegExp(`^${escapeStringRegexp(path.resolve('src/app/work'))}`),
