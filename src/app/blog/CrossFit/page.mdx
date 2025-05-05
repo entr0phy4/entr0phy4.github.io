@@ -9,23 +9,33 @@ export const article = {
   },
 }
 
+export const sections = [
+  { id: 'enumeration', title: 'Enumeration' },
+  { id: 'exploitation', title: 'Explotation' },
+  { id: 'lateral-movements', title: 'Lateral movements' },
+  { id: 'privilege-escalation', title: 'Privilege escalation' },
+]
+
 export const metadata = {
   title: article.title,
   description: article.description,
+
 }
 
-```json
-Victim = {
-  "name": "CrossFit",
-  "ip_address": "10.10.10.208",
-  "difficult": "Insane",
-  "os": "Linux"
+## Crossfit
+
+```js
+target = {
+  name: 'CrossFit',
+  ip_address: '10.10.10.208',
+  difficult: 'Insane',
+  os: 'Linux',
 }
 ```
 
 ---
 
-### Enumeration
+### Enumeration {{ id: 'enumeration' }}
 
 With the first [Nmap](https://nmap.org/) we try to find out the open port of the target:
 
@@ -177,7 +187,7 @@ ffuf reports the ftp subdomain, unfortunately, adding `ftp.crossfit.htb` to `/et
 
 ---
 
-### Exploitation
+### Exploitation {{ id: 'exploitation' }}
 
 So taking advantage of the fact that we can inject code through the `User-Agent` of the request, let's try to find out what's there.
 
@@ -207,7 +217,7 @@ Is our code, if we decode it we get perfectly readable HTML.
 echo ...bPCFET0NUWVBFIGh0bWw... | base64 -d
 ```
 
-![](/src/app/blog/CrossFit/gym-club-crossfit-htb.png)
+![](/src/app/blog/CrossFit/ftp_crossfit_htb.png)
 
 Obviosuly, we cannot create an account by simple clicking on the "Create New Account" button.
 But we can notice when hovering that, when clicking, it will request a file from `/accounts/create`, so let's try to get that HTML code the same way we did before but changing the target.
@@ -342,7 +352,7 @@ drwxr-xr-x  9 0  0    4096 May 12  2020 gym-club
 drwxr-xr-x  2 0  0    4096 May 01  2020 html
 ```
 
-The forlders we found remind me of the subdomains we have been checking, so something makes me think that `development-test` is another one, but if we add it to `/etc/hosts` we still don't see different content.
+The folders we found remind me of the subdomains we have been checking, so something makes me think that `development-test` is another one, but if we add it to `/etc/hosts` we still don't see different content.
 
 Now, we have write capability in `development-test`, so our idea will be to try to upload a reverse shell and then try to request it through the vulnerable `User-Agent` field.
 
@@ -388,7 +398,7 @@ The next step would be to make a proper [treatment of the teletypewriter (TTY)](
 
 ---
 
-### Lateral movements
+### Lateral movements {{ id: 'lateral-movements' }}
 
 Being `www-data` user we don't really have many options, thinking about which other user to become we find our options:
 
@@ -658,7 +668,7 @@ Now the good stuff starts.
 
 ---
 
-### Privilege escalation
+### Privilege escalation {{ id: 'privilege-escalation' }}
 
 As a first instance, being isaac we are part of the `staff` group.
 
