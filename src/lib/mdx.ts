@@ -23,27 +23,14 @@ async function loadEntries<T extends { date: string }>(
   ).sort((a, b) => b.date.localeCompare(a.date))
 }
 
+type ImagePropsWithOptionalAlt = Omit<ImageProps, 'alt'> & { alt?: string }
+
+export type MDXEntry<T> = T & { href: string; metadata: T }
+
 export interface Section {
   id: string
   title: string
 }
-
-export async function loadSections(post: string) {
-  const arrPromises = await Promise.all(
-    (await glob('**/page.mdx', { cwd: `src/app/blog/${post}` })).map(
-      async (filename) => {
-        let metadata = await import(`../app/blog/${post}/${filename}`)
-        return metadata.sections
-      },
-    ),
-  )
-
-  return arrPromises[0]
-}
-
-type ImagePropsWithOptionalAlt = Omit<ImageProps, 'alt'> & { alt?: string }
-
-export type MDXEntry<T> = T & { href: string; metadata: T }
 
 export interface Article {
   date: string
