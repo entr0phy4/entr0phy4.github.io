@@ -8,18 +8,29 @@ export const article = {
   },
 }
 
+export const sections = [
+  { id: 'introduction', title: 'Introduction' },
+  { id: 'why-we-need-it', title: 'Necessity' },
+  { id: 'steps-to-upgrade', title: 'Steps' },
+  { id: 'benefits', title: 'Benefits' },
+]
+
 export const metadata = {
   title: article.title,
   description: article.description,
 }
 
-### **Introduction**
+---
+
+### **Introduction** {{ id: 'introduction' }}
 
 After compromising a system, one of the first goals is often to upgrade your shell to a fully interactive TTY session. A simple shell, such as those provided by a reverse shell or a basic command execution, may not offer all the functionality needed for an effective post-exploitation scenario. Upgrading to a fully interactive terminal allows attackers or penetration testers to regain control over their session and effectively interact with the compromised system, just as they would in a local terminal environment.
 
 This article covers the **step-by-step process** to achieve this upgrade and describes the necessary commands and techniques to turn a simple shell into a fully interactive TTY, commonly done after establishing a foothold in a vulnerable system.
 
-### **The Need for an Interactive TTY Shell**
+---
+
+### **The Need for an Interactive TTY Shell** {{ id: 'why-we-need-it'}}
 
 After exploiting a vulnerability and gaining access to a compromised system, the shell might be limited in its functionality. Common limitations include:
 
@@ -29,7 +40,9 @@ After exploiting a vulnerability and gaining access to a compromised system, the
 
 By upgrading to a fully interactive TTY session, we address these limitations and allow for smoother, more effective interaction with the system.
 
-### **Steps to Upgrade to an Interactive TTY**
+---
+
+### **Steps to Upgrade to an Interactive TTY** {{ id: 'steps-to-upgrade'}}
 
 **1. Create a Pseudo-Terminal Using `script` (Optional)**
 
@@ -82,7 +95,7 @@ fg  # Bring the process back to the foreground
 
 At this point, you should have a fully interactive terminal session, allowing for advanced features such as editing input, running background jobs, and using terminal shortcuts like Ctrl+C and Ctrl+Z.
 
-### Post-Exploitation Benefits of an Interactive TTY
+### Post-Exploitation Benefits of an Interactive TTY {{ id: 'benefits' }}
 
 Once the shell is upgraded to an interactive TTY, the attacker or penetration tester gains several advantages:
 
