@@ -256,16 +256,13 @@ function RootLayoutInner({ children }: { children: React.ReactNode }) {
         </motion.div>
       </header>
 
-      <motion.div
-        layout
-        className="relative flex flex-auto overflow-hidden bg-black pt-14"
-      >
+      <motion.div layout className="relative flex flex-auto bg-black pt-14">
         <motion.div
           layout
           className="relative isolate flex w-full flex-col pt-9"
         >
           <GridPattern
-            className="absolute inset-x-0 -top-14 -z-10 h-[1000px] w-full fill-white/1 stroke-neutral-950/5 [mask-image:linear-gradient(to_bottom_left,white_40%,transparent_50%)]"
+            className="absolute inset-x-0 -top-14 -z-10 h-[1000px] w-full [mask-image:linear-gradient(to_bottom_left,white_40%,transparent_50%)] fill-white/1 stroke-neutral-950/5"
             yOffset={-96}
             interactive
           />

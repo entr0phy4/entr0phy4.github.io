@@ -2,9 +2,16 @@ import { ContactSection } from '@/components/ContactSection'
 import { Container } from '@/components/Container'
 import { FadeIn } from '@/components/FadeIn'
 import { MDXComponents } from '@/components/MDXComponents'
+import { NavBar } from '@/components/NavBar'
 import { PageLinks } from '@/components/PageLinks'
+import { TableOfContents } from '@/components/TableOfContent'
 import { formatDate } from '@/lib/formatDate'
-import { type Article, type MDXEntry, loadArticles } from '@/lib/mdx'
+import {
+  type Article,
+  type MDXEntry,
+  loadArticles,
+  loadSections,
+} from '@/lib/mdx'
 
 export default async function BlogArticleWrapper({
   article,
@@ -14,6 +21,7 @@ export default async function BlogArticleWrapper({
   children: React.ReactNode
 }) {
   let allArticles = await loadArticles()
+  let allSections = await loadSections('CrossFit')
   let moreArticles = allArticles
     .filter(({ metadata }) => metadata !== article)
     .slice(0, 2)
@@ -37,6 +45,10 @@ export default async function BlogArticleWrapper({
             </p>
           </header>
         </FadeIn>
+
+        <div className="h-11" />
+
+        <NavBar sections={allSections} />
 
         <FadeIn>
           <MDXComponents.wrapper className="mt-24 sm:mt-32 lg:mt-40">
