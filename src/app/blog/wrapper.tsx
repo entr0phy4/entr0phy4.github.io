@@ -4,7 +4,6 @@ import { FadeIn } from '@/components/FadeIn'
 import { MDXComponents } from '@/components/MDXComponents'
 import { NavBar } from '@/components/NavBar'
 import { PageLinks } from '@/components/PageLinks'
-import { TableOfContents } from '@/components/TableOfContent'
 import { formatDate } from '@/lib/formatDate'
 import {
   type Article,
