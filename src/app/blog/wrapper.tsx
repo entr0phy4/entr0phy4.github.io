@@ -7,20 +7,21 @@ import { PageLinks } from '@/components/PageLinks'
 import { formatDate } from '@/lib/formatDate'
 import {
   type Article,
+  type Section,
   type MDXEntry,
   loadArticles,
-  loadSections,
 } from '@/lib/mdx'
 
 export default async function BlogArticleWrapper({
   article,
+  sections,
   children,
 }: {
   article: MDXEntry<Article>
+  sections: MDXEntry<Section[]>
   children: React.ReactNode
 }) {
   let allArticles = await loadArticles()
-  let allSections = await loadSections('CrossFit')
   let moreArticles = allArticles
     .filter(({ metadata }) => metadata !== article)
     .slice(0, 2)
@@ -44,11 +45,13 @@ export default async function BlogArticleWrapper({
             </p>
           </header>
         </FadeIn>
+      </Container>
 
-        <div className="h-11" />
+      <div className="h-11" />
 
-        <NavBar sections={allSections} />
+      <NavBar sections={sections} />
 
+      <Container as="article" className="mt-24 sm:mt-32 lg:mt-40">
         <FadeIn>
           <MDXComponents.wrapper className="mt-24 sm:mt-32 lg:mt-40">
             {children}
