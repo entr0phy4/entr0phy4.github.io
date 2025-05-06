@@ -36,6 +36,7 @@ export interface Article {
   date: string
   title: string
   description: string
+  tags: string[]
   author: {
     name: string
     role: string

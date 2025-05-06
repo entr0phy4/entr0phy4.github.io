@@ -1,6 +1,16 @@
 export const article = {
   date: '2025-05-04',
   title: 'Machine: CrossFit',
+  tags: [
+    'XSS Injection',
+    'CSRF bypass',
+    'Linux',
+    'Cracking hashes',
+    'User pivoting',
+    'Binary analysis',
+    'FTP enumeration',
+    'Abuse seed rand',
+  ],
   description:
     'CrossFit is an insane difficulty Linux box featuring an Apache server that hosts the website of a fictional',
   author: {
@@ -19,7 +29,6 @@ export const sections = [
 export const metadata = {
   title: article.title,
   description: article.description,
-
 }
 
 ## Crossfit
@@ -1052,7 +1061,7 @@ isaac@crossfit:/tmp$ echo -n "$(./get_time)"
 1590912600
 ```
 
-With this and the ID `9999` we set for the message with our ssh key, we can compute the value `random_value_based_in_current_time + ID_of_message` to later obtain the md5 hash.
+With this and the ID `1234` we set for the message with our ssh key, we can compute the value `random_value_based_in_current_time + ID_of_message` to later obtain the md5 hash.
 
 ```bash
 isaac@crossfit:/tmp$ echo -n "$(./get_time)1234" | md5sum
