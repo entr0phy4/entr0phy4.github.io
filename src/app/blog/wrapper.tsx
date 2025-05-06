@@ -11,6 +11,7 @@ import {
   type MDXEntry,
   loadArticles,
 } from '@/lib/mdx'
+import { RenderTags } from '@/lib/renderTags'
 
 export default async function BlogArticleWrapper({
   article,
@@ -43,6 +44,9 @@ export default async function BlogArticleWrapper({
             <p className="mt-6 text-sm font-semibold text-white">
               by {article.author.name}, {article.author.role}
             </p>
+            <dd className="mt-2">
+              <RenderTags tags={article.tags} />
+            </dd>
           </header>
         </FadeIn>
       </Container>

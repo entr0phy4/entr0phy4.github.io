@@ -10,11 +10,12 @@ import { FadeIn } from '@/components/FadeIn'
 import { PageIntro } from '@/components/PageIntro'
 import { formatDate } from '@/lib/formatDate'
 import { loadArticles } from '@/lib/mdx'
+import { Badge, type Colors, colors } from '@/components/Badge'
+import { RenderTags } from '@/lib/renderTags'
 
 export const metadata: Metadata = {
   title: 'Blog',
-  description:
-    'Stay up-to-date with the latest industry news as our marketing teams finds new ways to re-purpose old CSS tricks articles.',
+  description: '',
 }
 
 export default async function Blog() {
@@ -47,22 +48,28 @@ export default async function Blog() {
                             {formatDate(article.date)}
                           </time>
                         </dd>
+
                         <dt className="sr-only">Author</dt>
-                        {/* <dd className="mt-6 flex gap-x-4"> */}
-                        {/*   <div className="flex-none overflow-hidden rounded-xl bg-neutral-100"> */}
-                        {/*     <Image */}
-                        {/*       alt="" */}
-                        {/*       {...article.author.image} */}
-                        {/*       className="h-12 w-12 object-cover grayscale" */}
-                        {/*     /> */}
-                        {/*   </div> */}
-                        {/*   <div className="text-sm text-white"> */}
-                        {/*     <div className="font-semibold"> */}
-                        {/*       {article.author.name} */}
-                        {/*     </div> */}
-                        {/*     <div>{article.author.role}</div> */}
-                        {/*   </div> */}
-                        {/* </dd> */}
+                        <dd className="mt-6 flex gap-x-4">
+                          {/* <div className="flex-none overflow-hidden rounded-xl bg-neutral-100"> */}
+                          {/*   <Image */}
+                          {/*     alt="" */}
+                          {/*     {...article.author.image} */}
+                          {/*     className="h-12 w-12 object-cover grayscale" */}
+                          {/*   /> */}
+                          {/* </div> */}
+                          <div className="mb-4 text-sm text-white">
+                            <div className="font-semibold">
+                              {article.author.name}
+                            </div>
+                            <div>{article.author.role}</div>
+                          </div>
+                        </dd>
+                        <FadeIn>
+                          <dd>
+                            <RenderTags tags={article.tags} />
+                          </dd>
+                        </FadeIn>
                       </dl>
                       <p className="mt-6 max-w-2xl text-base text-neutral-600">
                         {article.description}
