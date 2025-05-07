@@ -20,6 +20,7 @@ import logoPhobiaLight from '@/images/clients/phobia/logo-light.svg'
 import logoUnseal from '@/images/clients/unseal/logo-light.svg'
 import imageLaptop from '@/images/laptop.jpg'
 import { type CaseStudy, type MDXEntry, loadCaseStudies } from '@/lib/mdx'
+import { RenderTags } from '@/lib/renderTags'
 
 const clients = [
   ['Phobia', logoPhobiaLight],
@@ -190,11 +191,36 @@ export default async function Home() {
             Software engineer from <strong>Colombia</strong>.
           </p>
         </FadeIn>
+        <FadeIn className="mt-2">
+          <dd>
+            <RenderTags
+              tags={[
+                'Hacking',
+                'Linux',
+                'Software',
+                'Hardware',
+                'Backend',
+                'Hack The Box',
+                'Development',
+                'Frontend',
+              ]}
+            />
+          </dd>
+        </FadeIn>
       </Container>
+
+      <SectionIntro
+        title="Mind is a maze of twisty little passages, all alike."
+        className="mt-24 sm:mt-32 lg:mt-40"
+      >
+        <p className="text-right font-thin italic">
+          - Colossal Cave Adventure - 1976
+        </p>
+      </SectionIntro>
 
       {/* <Clients /> */}
 
-      <CaseStudies caseStudies={caseStudies} />
+      {/* <CaseStudies caseStudies={caseStudies} />
 
       {/* <Testimonial */}
       {/*   className="mt-24 sm:mt-32 lg:mt-40" */}
@@ -204,7 +230,7 @@ export default async function Home() {
       {/*   finding a way to access the user’s microphone without triggering one of */}
       {/*   those annoying permission dialogs. */}
       {/* </Testimonial> */}
-      {/**/}
+
       {/* <Services /> */}
 
       {/* <ContactSection /> */}
