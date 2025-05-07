@@ -149,7 +149,7 @@ export function NavBar({ sections }: Props) {
         )}
       </Popover>
       <FadeIn>
-        <div className="hidden shadow-xl sm:flex sm:h-32 sm:justify-center sm:border-b sm:border-white/10 sm:shadow-white/5 sm:[@supports(backdrop-filter:blur(0))]:bg-transparent sm:[@supports(backdrop-filter:blur(0))]:backdrop-blur-sm">
+        <div className="hidden shadow-sm sm:flex sm:h-32 sm:justify-center sm:border-b sm:border-white/10 sm:shadow-white/5 sm:[@supports(backdrop-filter:blur(0))]:bg-transparent sm:[@supports(backdrop-filter:blur(0))]:backdrop-blur-sm">
           <ol
             role="list"
             className="mb-[-2px] grid auto-cols-[minmax(0,15rem)] grid-flow-col text-base font-medium text-white [counter-reset:section]"
