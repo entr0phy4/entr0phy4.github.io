@@ -27,10 +27,16 @@ type ImagePropsWithOptionalAlt = Omit<ImageProps, 'alt'> & { alt?: string }
 
 export type MDXEntry<T> = T & { href: string; metadata: T }
 
+export interface SectionChild {
+  id: string
+  title: string
+  child?: SectionChild[]
+}
+
 export interface Section {
   id: string
   title: string
-  child: { id: string; title: string }[]
+  child?: SectionChild[]
 }
 
 export interface Article {

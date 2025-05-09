@@ -8,6 +8,47 @@ import { SectionHeading } from '@/components/SectionHeading'
 import { Section } from '@/lib/mdx'
 import { Link } from './Link'
 
+function renderSectionItems(section: Section, parentIndex: string) {
+  return (
+    <ol
+      role="list"
+      className="divide-y divide-neutral-600/30 rounded-2xl pl-6 py-3 text-base tracking-tight sm:pl-8 sm:py-7"
+    >
+      {section.child?.map(({ id, title, child }, index) => {
+        const currentIndex = parentIndex ? `${parentIndex}.${index}` : `${index}`
+        return (
+          <li
+            key={title}
+            className="flex flex-col py-3"
+            aria-label={`${title} on page ${index}`}
+          >
+            <div className="flex justify-between">
+              <Link
+                href={'#' + id}
+                className="font-medium text-white"
+                aria-hidden="true"
+              >
+                {title}
+              </Link>
+              <span
+                className="font-mono text-[#00ff00]"
+                aria-hidden="true"
+              >
+                {currentIndex}
+              </span>
+            </div>
+            {child && (
+              <div className="ml-6">
+                {renderSectionItems({ id, title, child }, currentIndex)}
+              </div>
+            )}
+          </li>
+        )
+      })}
+    </ol>
+  )
+}
+
 export function TableOfContents({
   description,
   sections,
@@ -35,32 +76,7 @@ export function TableOfContents({
                       <h3 className="font-display text-3xl font-bold tracking-tight text-[#00ff00]">
                         {indexSection + '. ' + section.title}
                       </h3>
-                      <ol
-                        role="list"
-                        className="mt-8 divide-y divide-neutral-600/30 rounded-2xl px-6 py-3 text-base tracking-tight sm:px-8 sm:py-7"
-                      >
-                        {section.child.map(({ id, title }, index) => (
-                          <li
-                            key={title}
-                            className="flex justify-between py-3"
-                            aria-label={`${title} on page ${index}`}
-                          >
-                            <Link
-                              href={'#' + id}
-                              className="font-medium text-white"
-                              aria-hidden="true"
-                            >
-                              {title}
-                            </Link>
-                            <span
-                              className="font-mono text-[#00ff00]"
-                              aria-hidden="true"
-                            >
-                              {indexSection + '.' + index}
-                            </span>
-                          </li>
-                        ))}
-                      </ol>
+                      {renderSectionItems(section, indexSection.toString())}
                     </li>
                   ),
               )}
