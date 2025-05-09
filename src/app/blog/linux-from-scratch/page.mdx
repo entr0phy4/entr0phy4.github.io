@@ -1,0 +1,820 @@
+import { SectionHeading } from '@/components/SectionHeading'
+import { TableOfContents } from '@/components/TableOfContent'
+export const article = {
+  date: '2025-06-05',
+  title: 'Linux from scratch',
+  tags: [
+    'Linux',
+    'Operative Systems',
+    'Virtual Kernel',
+    'Bootloaders',
+    'Filesystem',
+    'Virtualization',
+    'Software',
+    'Partitioning',
+    'Incomplete',
+  ],
+  description:
+    'This guide will take you through the step-by-step process of building your own Linux distribution from the ground up, known as "Linux From Scratch" (LFS).',
+  author: {
+    name: '@Entr0phy4 (David Agámez)',
+    role: 'Software Engineering',
+  },
+}
+
+export const sections = [
+  {
+    id: 'table-of-contents',
+    title: 'Table of contents',
+  },
+  {
+    id: 'introduction',
+    title: 'Introduction',
+    child: [{ id: 'background', title: 'Background' }],
+  },
+  {
+    id: 'preparing-host-system',
+    title: 'Preparing Host System',
+    child: [
+      { id: 'virtualizing-debian', title: 'Virtualizing Debian' },
+      { id: 'installing-debian', title: 'Installing Debian' },
+      { id: 'setting-up-debian', title: 'Setting up Debian' },
+      { id: 'system-requirements', title: 'System requirements' },
+      { id: 'creating-snapshot', title: 'Creating snapshot' },
+      { id: 'partitioning', title: 'Partitioning' },
+      { id: 'creating-file-system', title: 'Creating a file system' },
+      { id: 'base-system-packages', title: 'Base system packages' },
+      { id: 'final-preparations', title: 'Final preparations' },
+    ],
+  },
+]
+
+export const metadata = {
+  title: article.title,
+  description: article.description,
+}
+
+<SectionHeading id="table-of-contents" number="1">
+  Table of contents
+</SectionHeading>
+
+<TableOfContents
+  description={` This guide will take you through the step-by-step process of building your own Linux distribution from the ground up, known as "Linux From Scratch" (LFS). The table of contents outlines the key stages involved in setting up a fully functional, custom Linux system. Whether you're looking to deepen your understanding of Linux or create a tailored OS environment, this guide will provide all the instructions you need. `}
+  sections={sections}
+/>
+
+Link to the official guide: [Linux From Scratch](https://www.linuxfromscratch.org/lfs/view/stable)
+
+<SectionHeading id="introduction" number="2">
+  Introduction
+</SectionHeading>
+
+### Background {{ id: 'background' }}
+
+<SectionHeading id="preparing-host-system" number="3">
+  Preparing Host System
+</SectionHeading>
+
+### Virtualizing Debian {{ id: 'virtualizing-debian' }}
+
+First of all it is necessary to know that we need a linux on which to work. We will be using [Debian 12.10.0](https://www.debian.org/index.es.html).
+
+![Debian ISO](/src/app/blog/linux-from-scratch/images/debian_iso.png)
+
+Once we have the ISO we will continue virtualizing it in our software of choice, in my case I will be using [VMware Workstation](https://www.vmware.com/)
+
+With **VMware Workstation** open, we will click on: _Create a New Virtual Machine_.
+
+![VMware workstation](/src/app/blog/linux-from-scratch/images/vmware_workstation.png)
+
+Once we click on it, we will be in this window, in which we will have to select the image of **Debian**.
+
+![Select debian ISO in VMware](/src/app/blog/linux-from-scratch/images/select_iso.png)
+
+Next, we will have to assign a name to our virtual machine, in our case it will be **LFS** from **Linux From Scratch**.
+
+![Assign name to virtual machine](/src/app/blog/linux-from-scratch/images/select_name.png)
+
+Now, we need to select the disk size, I will leave the default value but later we will add another disk to store the LFS.
+
+![Select disk size](/src/app/blog/linux-from-scratch/images/select_disk_size.png)
+
+In the next step, we will have to select the hardware specifications, we will use 8 RAM.
+
+![Select RAM size](/src/app/blog/linux-from-scratch/images/select_ram_size.png)
+
+and 4 processor cores.
+
+![Select processor cores](/src/app/blog/linux-from-scratch/images/select_processor_cores.png)
+
+After this our virtual machine should start up without any problems.
+
+### Installing Debian {{ id: 'installing-debian' }}
+
+![Debian installer menu](/src/app/blog/linux-from-scratch/images/debian_installer_menu.png)
+
+We will complicate our life much more later, but for now we will select graphical installation. If you use the North American keyboard layout and you understand English, just need to click next for the first few steps, if this is not your case, select the options of your preference.
+
+In the network configuration it is the same story, you can leave the default hostname and do not set a domain name.
+
+Next step, enter your password for super user.
+
+![Set root password](/src/app/blog/linux-from-scratch/images/set_root_password.png)
+
+Now, set your user name.
+
+![Set username](/src/app/blog/linux-from-scratch/images/set_username.png)
+
+You must then enter a new password but for your non-administrative user.
+
+Next should be the clock configuration, which again depends on your region.
+
+Then it will ask us about disk partitioning, we will select use the entire disk.
+
+![Select partitioning](/src/app/blog/linux-from-scratch/images/select_partitioning.png)
+
+For the partition scheme we will select _All files in one partition_.
+
+![Selecting partition scheme](/src/app/blog/linux-from-scratch/images/select_partition_scheme.png)
+
+Later we will separate `/home` in another partition.
+
+![Finish partitioning](/src/app/blog/linux-from-scratch/images/finish_partitioning.png)
+
+Select _Finish partitioning and write changes to disk_.
+
+![Confirm partitioning](/src/app/blog/linux-from-scratch/images/confirm_partitioning.png)
+
+And that's it.
+
+Now, we must wait for the installation of the base system to be completed.
+
+Then it will ask us if we want to use another installation media, select _no_ and _continue_.
+
+![Select if you want another installation media](/src/app/blog/linux-from-scratch/images/another_installation_media.png)
+
+Next it will ask us for the package manager configuration, select our region if it is there, if it is not, select the nearest one, when it asks us for the debian archive mirror, leave the default one.
+
+![Select Debian archive mirror](/src/app/blog/linux-from-scratch/images/select_archive_mirror.png)
+
+When asked for the http proxy, we leave it blank.
+
+Then start configuring the package manager (apt).
+
+After, in the popularity contest select _no_ and _continue_.
+
+After installing some other packages it will ask to select our **desktop environment**, in my case I will user **GNOME**.
+
+![Select desktop environment](/src/app/blog/linux-from-scratch/images/select_desktop_environment.png)
+
+This it could take a few minutes, then ask us if we want to install the bootloader, **GRUB**, select _yes_ and _continue_.
+
+![Installing GRUB bootloader](/src/app/blog/linux-from-scratch/images/install_grub.png)
+
+Then we will have to indicate where we want to install it, select `/dev/sda` and _continue_.
+
+The installation process will start and may take a few minutes, when this is over we should see something like this:
+
+![Finish installation](/src/app/blog/linux-from-scratch/images/finish_installation.png)
+
+Click on _continue_, the virtual machine will reboot and the once the system restarts we should see the following.
+
+![Start of Debian System](/src/app/blog/linux-from-scratch/images/start_system.png)
+
+### Setting up Debian {{ id: 'setting-up-debian' }}
+
+Well, so far we already have a base operating system on which to operate comfortably, let's make some modifications.
+
+First, we will soon have quite extensive copilation processes so we want to avoid the automatic suspension of the system.
+
+We are going to `Settings > Power > Power Saving Options` and we disable everything.
+
+![Disable power saving options](/src/app/blog/linux-from-scratch/images/power_saving.png)
+
+Now let's open a terminal and become root.
+
+![Become root](/src/app/blog/linux-from-scratch/images/become_root.png)
+
+Typing:
+
+```bash
+sudo usermod -aG sudo <YOUR_NON_ADMINISTRATIVE_USER>
+```
+
+And reboot.
+
+With this we add our user to the sudoers file, to be able to execute actions with elevated privileges without needing to be root.
+
+<TopTip>
+  If your eyes are bleeding with the white terminal theme you can go to: <br />
+  `Menu > Preferences > General > Terminal variant > dark`
+</TopTip>
+
+![Groups of entr0phy4 user](/src/app/blog/linux-from-scratch/images/groups_user.png)
+
+Now, we are part of the sudo group.
+
+### System requirements {{ id: 'system-requirements' }}
+
+the official guide provides us with the following script to verify the necessary dependencies.
+
+```bash
+cat > version-check.sh << "EOF"
+#!/bin/bash
+# A script to list version numbers of critical development tools
+
+# If you have tools installed in other directories, adjust PATH here AND
+# in ~lfs/.bashrc (section 4.4) as well.
+
+LC_ALL=C
+PATH=/usr/bin:/bin
+
+bail() { echo "FATAL: $1"; exit 1; }
+grep --version > /dev/null 2> /dev/null || bail "grep does not work"
+sed '' /dev/null || bail "sed does not work"
+sort   /dev/null || bail "sort does not work"
+
+ver_check()
+{
+   if ! type -p $2 &>/dev/null
+   then
+     echo "ERROR: Cannot find $2 ($1)"; return 1;
+   fi
+   v=$($2 --version 2>&1 | grep -E -o '[0-9]+\.[0-9\.]+[a-z]*' | head -n1)
+   if printf '%s\n' $3 $v | sort --version-sort --check &>/dev/null
+   then
+     printf "OK:    %-9s %-6s >= $3\n" "$1" "$v"; return 0;
+   else
+     printf "ERROR: %-9s is TOO OLD ($3 or later required)\n" "$1";
+     return 1;
+   fi
+}
+
+ver_kernel()
+{
+   kver=$(uname -r | grep -E -o '^[0-9\.]+')
+   if printf '%s\n' $1 $kver | sort --version-sort --check &>/dev/null
+   then
+     printf "OK:    Linux Kernel $kver >= $1\n"; return 0;
+   else
+     printf "ERROR: Linux Kernel ($kver) is TOO OLD ($1 or later required)\n" "$kver";
+     return 1;
+   fi
+}
+
+# Coreutils first because --version-sort needs Coreutils >= 7.0
+ver_check Coreutils      sort     8.1 || bail "Coreutils too old, stop"
+ver_check Bash           bash     3.2
+ver_check Binutils       ld       2.13.1
+ver_check Bison          bison    2.7
+ver_check Diffutils      diff     2.8.1
+ver_check Findutils      find     4.2.31
+ver_check Gawk           gawk     4.0.1
+ver_check GCC            gcc      5.2
+ver_check "GCC (C++)"    g++      5.2
+ver_check Grep           grep     2.5.1a
+ver_check Gzip           gzip     1.3.12
+ver_check M4             m4       1.4.10
+ver_check Make           make     4.0
+ver_check Patch          patch    2.5.4
+ver_check Perl           perl     5.8.8
+ver_check Python         python3  3.4
+ver_check Sed            sed      4.1.5
+ver_check Tar            tar      1.22
+ver_check Texinfo        texi2any 5.0
+ver_check Xz             xz       5.0.0
+ver_kernel 5.4
+
+if mount | grep -q 'devpts on /dev/pts' && [ -e /dev/ptmx ]
+then echo "OK:    Linux Kernel supports UNIX 98 PTY";
+else echo "ERROR: Linux Kernel does NOT support UNIX 98 PTY"; fi
+
+alias_check() {
+   if $1 --version 2>&1 | grep -qi $2
+   then printf "OK:    %-4s is $2\n" "$1";
+   else printf "ERROR: %-4s is NOT $2\n" "$1"; fi
+}
+echo "Aliases:"
+alias_check awk GNU
+alias_check yacc Bison
+alias_check sh Bash
+
+echo "Compiler check:"
+if printf "int main(){}" | g++ -x c++ -
+then echo "OK:    g++ works";
+else echo "ERROR: g++ does NOT work"; fi
+rm -f a.out
+
+if [ "$(nproc)" = "" ]; then
+   echo "ERROR: nproc is not available or it produces empty output"
+else
+   echo "OK: nproc reports $(nproc) logical cores are available"
+fi
+EOF
+
+bash version-check.sh
+```
+
+Let's copy it and enter it in the terminal, after press enter we should a output like
+
+![Verify check](/src/app/blog/linux-from-scratch/images/verify_check_output.png)
+
+A few errors and a new `.sh` file called `version-check`.
+
+The errors basically indicate that the corresponding package is not installed, and also report some symbolic links that we need to create.
+You can download each package independently via
+
+```bash
+sudo apt install <PACKAGE_NAME>
+```
+
+Keep in mind that you will have to download the developer's packages in case it exists, for debian-based distros, they usually have the termination `-dev`, but on some other systems it is `-devel`.
+
+But in my case I decided to create a script called `install-lfs-deps.sh` to automate that process.
+
+```bash
+#!/bin/bash
+set -e
+
+echo "==== [1/5] Updating package list ===="
+sudo apt update
+
+# Core packages required for LFS
+PACKAGES=(
+  bash
+  binutils
+  bison
+  coreutils
+  diffutils
+  findutils
+  gawk
+  gcc
+  g++
+  grep
+  gzip
+  linux-headers-$(uname -r)
+  m4
+  make
+  patch
+  perl
+  python3
+  sed
+  tar
+  texinfo
+  xz-utils
+)
+
+echo "==== [2/5] Installing required base packages ===="
+for pkg in "${PACKAGES[@]}"; do
+  echo "Installing $pkg..."
+  sudo apt install -y "$pkg"
+done
+
+echo "==== [3/5] Checking for and installing available development packages (-dev or -devel) ===="
+for pkg in "${PACKAGES[@]}"; do
+  dev_pkg="${pkg}-dev"
+  devel_pkg="${pkg}-devel"
+
+  if apt-cache show "$dev_pkg" >/dev/null 2>&1; then
+    echo "Installing development package: $dev_pkg"
+    if ! sudo apt install -y "$dev_pkg"; then
+      echo "Warning: Failed to install $dev_pkg"
+    fi
+  elif apt-cache show "$devel_pkg" >/dev/null 2>&1; then
+    echo "Installing development package: $devel_pkg"
+    if ! sudo apt install -y "$devel_pkg"; then
+      echo "Warning: Failed to install $devel_pkg"
+    fi
+  else
+    echo "No development package (-dev or -devel) found for $pkg"
+  fi
+done
+
+echo "==== [4/5] Creating required LFS symlinks ===="
+# Required symlinks for LFS
+sudo ln -sf /bin/bash /bin/sh
+sudo ln -sf /usr/bin/bison /usr/bin/yacc
+sudo ln -sf /usr/bin/gawk /usr/bin/awk
+
+echo "==== [5/5] Verifying g++ compilation ability ===="
+if echo "int main(){}" | g++ -x c++ -o /tmp/testprog -; then
+  echo "g++ can compile C++ programs"
+  rm -f /tmp/testprog
+else
+  echo "ERROR: g++ failed to compile a simple program"
+fi
+
+echo "==== All done! You can now run version-check.sh to verify versions ===="
+```
+
+Once we have the script on the machine we will have to give it execution permissions.
+
+```bash
+chmod +x install-lfs-deps.sh
+```
+
+and execute.
+
+```bash
+bash install-lfs-deps.sh
+```
+
+![Install LFS dependencies in execution](/src/app/blog/linux-from-scratch/images/install_lfs_deps.png)
+
+and if you run `version-check.sh` again.
+
+```bash
+bash version-check.sh
+```
+
+![Version check success output](/src/app/blog/linux-from-scratch/images/version_check_success.png)
+
+We do not get any errors.
+
+### Creating snapshot {{ id: 'creating-snapshot' }}
+
+For this point, it is advisable to create a snapshot of the system so as not to lose our progress in case something goes wrong.
+
+If you are using **VMware workstation** for virtualization, in the upper menu, you should have the following options:
+
+![VMware upper menu](/src/app/blog/linux-from-scratch/images/vmware_upper_menu.png)
+
+Set a name and description for the snapshot.
+
+![Snapshot of machine](/src/app/blog/linux-from-scratch/images/snapshot_machine.png)
+
+And our snapshot has been created, in case we have an error we can always return to this point.
+
+![Snapshots timeline](/src/app/blog/linux-from-scratch/images/snapshots_timeline.png)
+
+### Partitioning {{ id: 'partitioning' }}
+
+Linux From Scratch like most other operating systems is usually installed on a dedicated partition.
+
+At this point, we are going to add a new disk whare we will store our LFS, first we must turn off our virtual machine.
+
+If we are in **VMWare**, we will double click on _Hard Disk (SCSI)_.
+
+![Hardware specifications](/src/app/blog/linux-from-scratch/images/hardware_specifications.png)
+
+Click on the _add_ button.
+
+![Select type of disk to add](/src/app/blog/linux-from-scratch/images/select_hard_disk.png)
+
+If ask us for for the type of disk we leave the recommended one (SCSI in my case), after select the option _Create a new virtual disk_ and _next_.
+
+Then you will be asked to select the size of the new disk.
+
+![Select size of new disk](/src/app/blog/linux-from-scratch/images/select_new_size_disk.png)
+
+We will allocate **30 GB** and leave the default name.
+
+![Save new disk](/src/app/blog/linux-from-scratch/images/save_new_disk.png)
+
+We can click on _save_ and run again our machine.
+
+Once the machine has been started, we are going to use `lsblk` to display our disks..
+
+```bash
+sudo lsblk
+```
+
+![lsblk print](/src/app/blog/linux-from-scratch/images/lsblk_print.png)
+
+And we can visualize our new disk `sdb`.
+
+Let's start by creating a new partition table for the disk with `fdisk`.
+
+```bash
+sudo fdisk /dev/sdb
+```
+
+![fdisk menu](/src/app/blog/linux-from-scratch/images/fdisk_menu.png)
+
+Displaying the help menu typing `m + Return` we can see these options.
+
+```bash
+  Create a new label
+   g   create a new empty GPT partition table
+   G   create a new empty SGI (IRIX) partition table
+   o   create a new empty MBR (DOS) partition table
+   s   create a new empty Sun partition table
+```
+
+In most cases, modern systems usually use a UEFI bootloader, which is we will be working with, therefore, **GPT** is the necessary partitioning scheme for systems booting in **UEFI** mode.
+so, option `g` is the one we are interested in, so we will type it in.
+
+We should see something similar to the following message.
+
+```bash
+Command (m for help): g
+Created a new GPT disklabel (GUID: B3D589A6-3CCE-D44E-88EB-A9276C854317).
+```
+
+Now type `w + Return` to write the changes and you should see:
+
+```bash
+Command (m for help): w
+The partition table has been altered.
+Calling ioctl() to re-read partition table.
+Syncing disks.
+```
+
+Now we just need tot start partitioning the disk, we will be using `cfdisk` as partition editor.
+
+```bash
+sudo cfdisk /dev/sdb
+```
+
+![Free partition on cfdisk](/src/app/blog/linux-from-scratch/images/free_partition.png)
+
+From now, we will focus on creating four partitions:
+
+- `efi`: This partition will store the kernels and other booting information.
+
+- `root`: Here's where we will be building our LFS.
+
+- `home`: Saves our user customizations.
+
+So, let's start with `efi`, select the _New_ option and assign **200M**, Once created, press `tab` to move to the option `Type` and press `Return`.
+Change the partition type to **EFI System**.
+
+![Select EFI system partition type](/src/app/blog/linux-from-scratch/images/efi_system_partition_type.png)
+
+Ready, now the root partition, we will assign **20G** in this case.
+The default type should be _Linux filesystem_, which is fine.
+
+Finally, to our `home` partition we will assign the rest of the space and the type will also be _Linux filesystem_.
+
+Our partitions should look like this:
+
+![Partitons created](/src/app/blog/linux-from-scratch/images/partitions_created.png)
+
+Now that they are ready, select the _write_ option and type _yes_.
+
+You should see a message like:
+
+```bash
+The partition table has been altered.
+```
+
+With `lsblk` we can see that our `sdb` disk now has a similar partitioning to our base systems, except for the **SWAP** that serves as virtual memory to extend the available RAM.
+Is mostly used for mechanical hard disks.
+
+![Compare partitioning of disks](/src/app/blog/linux-from-scratch/images/compare_partitioning.png)
+
+### Creating a file system {{ id: 'creating-file-system' }}
+
+Then we need to assign a **ext4** file system to root and home partition, we are going to be using `mkfs`.
+
+```bash
+mkfs -v -t ext4 /dev/<YOUR_ROOT_PARTITION>
+```
+
+![Setting filesystem to root partition](/src/app/blog/linux-from-scratch/images/set_ext4_root.png)
+
+We do the same for `sdb3`.
+
+Now for the `efi` partition, we must format with `vfat` because this is the file system set by the **UEFI** specification.
+
+```bash
+sudo mkfs.vfat -F 32 /dev/<YOUR_EFI_PARTITION>
+```
+
+And we should have the following output:
+
+```bash
+entr0phy4@debian:~$ sudo mkfs.vfat -F 32 /dev/sdb1
+mkfs.fat 4.2 (2021-01-31)
+```
+
+If we see the partitions with their respective file systems (`sudo lsblk -f`), it would look like this:
+
+![Partitions with ther file systems](/src/app/blog/linux-from-scratch/images/partitions_file_systems.png)
+
+Once with each partition and its respective file system, let's edit root's, and personalized user `.bashrc` file to export the following variable for each shell session.
+
+```bash
+echo "export LFS=/mnt/lfs" | sudo tee -a /root/.bashrc | tee -a ~/.bashrc 
+```
+
+If we type `source .bashrc` and `echo $LFS` we should obtain from output `/mnt/lfs`.
+
+![echo LFS variable](/src/app/blog/linux-from-scratch/images/echo_lfs_var.png)
+
+We will now proceed to create the `$LFS` directory.
+
+```bash
+entr0phy4@debian:~$ sudo mkdir -pv $LFS
+mkdir: created directory '/mnt/lfs'
+```
+
+With this we have created the `$LFS` directory, now we will mount the `root` partitions to it.
+
+```bash
+entr0phy4@debian:~$ sudo mount -v -t ext4 /dev/sdb2 $LFS
+mount: /dev/sdb2 mounted on /mnt/lfs.
+```
+
+All right, now we will mount the `home` partition.
+
+```bash
+entr0phy4@debian:~$ sudo mkdir -pv $LFS/home
+mkdir: created directory '/mnt/lfs/home'
+entr0phy4@debian:~$ sudo mount -v -t ext4 /dev/sdb3 $LFS/home
+mount: /dev/sdb3 mounted on /mnt/lfs/home.
+```
+
+With this we have mounted the partitions to the `$LFS` directory. If we check the 
+content of `/mnt/lfs` we should see the following:
+
+![Content of $LFS](/src/app/blog/linux-from-scratch/images/lfs_content.png)
+
+### Base system packages {{ id: 'base-system-packages' }}
+
+For this point, let's create a directory to store the packages and patches.
+
+```bash
+sudo mkdir -pv $LFS/sources
+```
+
+And we make that directory writable and set the sticky bit, 
+this is to only the owner of a file can delete or modify it.
+
+```bash
+entr0phy4@debian:~$ sudo chmod -v a+wt $LFS/sources
+mode of '/mnt/lfs/sources' changed to 0755 (rwxr-xr-x) to 1777 (rwxrwxrwt)
+```
+
+Now we will download the packages and patches from the `lfs-packages` repository.
+
+All packages we need are in [wget-list-sysv](https://www.linuxfromscratch.org/lfs/view/stable/wget-list-sysv).
+
+So let's download the list of packages.
+
+```bash
+wget https://www.linuxfromscratch.org/lfs/view/stable/wget-list-sysv
+```
+
+![wget-list-sysv](/src/app/blog/linux-from-scratch/images/wget_list_sysv.png)
+
+We now have a file called `wget-list-sysv` in our current directory.
+
+And we will download the packages sending the list of packages to the `wget` command and
+indicating `--directory-prefix` to specify the directory where the packages will be downloaded.
+
+```bash
+wget --input-file=wget-list-sysv --continue --directory-prefix=$LFS/sources
+```
+
+This start the download all the packages and we can see the progress.
+
+![Download progress](/src/app/blog/linux-from-scratch/images/wget_progress.png)
+
+Once the download is finished, we can see this message in the terminal.
+
+```bash
+FINISHED --2025-05-08 21:37:14--
+Total wall clock time: 7m 24s
+Downloaded: 92 files, 528M in 6m 24s (1.38 MB/s)
+```
+
+And we can see the packages in the `$LFS/sources` directory.
+
+![Packages in $LFS/sources](/src/app/blog/linux-from-scratch/images/packages_in_lfs_sources.png)
+
+Now, let's verify the integrity of the downloaded packages. First, let's download the MD5 checksums file:
+
+```bash
+wget https://www.linuxfromscratch.org/lfs/view/stable/md5sums
+```
+
+Once we have the file, we will verify the integrity of the downloaded packages with the following command:
+
+```bash
+pushd $LFS/sources; md5sum -c ~/md5sums; popd
+```
+
+And we should see something like this:
+
+![md5sum verification](/src/app/blog/linux-from-scratch/images/md5sum_verification.png)
+
+In our case, all the packages have been downloaded correctly except `expat-2.6.4.tar.xz`.
+So we need to download it manually.
+
+The next link is the github repository of the package for [expat 2.6.4](https://github.com/libexpat/libexpat/releases/tag/R_2_6_4) release.
+
+So click on the link and download the file `expat-2.6.4.tar.xz`.
+
+![expat-2.6.4.tar.xz](/src/app/blog/linux-from-scratch/images/expat_2_6_4.png)
+
+Once we have the file, we will move it to the `$LFS/sources` directory.
+
+```bash
+mv expat-2.6.4.tar.xz $LFS/sources
+```
+
+and check again the md5sum of the files.
+
+```bash
+pushd $LFS/sources; md5sum -c ~/md5sums; popd
+```
+
+In this case all packages pass the verification.
+
+<TopTip>
+If you have any problems with the packages, you can find support with download links in the <u>[official guide](https://www.linuxfromscratch.org/lfs/view/stable/chapter03/packages.html).</u>
+</TopTip>
+
+If we donwload the packages being non-root user, we need to change the owner of the packages to root.
+
+```bash
+sudo chown root:root $LFS/sources/*
+```
+
+You can check the owner of the files with `ls -l $LFS/sources`.
+
+![ls -l $LFS/sources](/src/app/blog/linux-from-scratch/images/root_owner.png)
+
+### Final preparations {{ id: 'final-preparations' }}
+
+Now we need to become root user for the rest of the process. This is necessary because we'll be performing operations in `$LFS` directory that require elevated privileges.
+
+#### Creating tree directory structure {{ id: 'creating-tree-structure' }}
+
+We need create the tree structure for our LFS.
+
+```bash
+mkdir -pv $LFS/{etc,var} $LFS/usr/{bin,lib,sbin}
+
+for i in bin lib sbin; do
+  ln -sv usr/$i $LFS/$i
+done
+
+case $(uname -m) in
+  x86_64) mkdir -pv $LFS/lib64 ;;
+esac
+```
+
+Once we paste the script on our terminal and press `Enter` we will see the following tree structure in our `$LFS` directory.
+
+![Tree structure of $LFS](/src/app/blog/linux-from-scratch/images/tree_structure.png)
+
+If you are Linux user, that looks familiar, right?
+
+Let's create one more directory for the `tools` where we will compile some tools we need.
+
+```bash
+mkdir -pv $LFS/tools
+```
+
+### Creating `lfs` user {{ id: 'creating-lfs-user' }}
+
+As a security measure, we will create a new user called `lfs` and add it to the `lfs` group.
+
+First, we need to create the group.
+
+```bash
+groupadd lfs
+```
+
+And then we create the user.
+
+```bash
+useradd -s /bin/bash -g lfs -m -k /dev/null lfs
+```
+
+and create a password for the user.
+
+```bash
+passwd lfs
+```
+
+To grant `lfs` full access to all the directories in `$LFS`:
+
+```bash
+chown -v lfs $LFS/{usr{,/*},var,etc,tools}
+case $(uname -m) in
+  x86_64) chown -v lfs $LFS/lib64 ;;
+esac
+```
+
+![Giving access to user lfs](/src/app/blog/linux-from-scratch/images/access_user_lfs.png)
+
+Now we become the `lfs` user.
+
+```bash
+su - lfs
+```
+
+From now, we will be working as `lfs` user.
+
+### Setting up environment variables {{ id: 'setting-up-environment-variables' }}
+
+```bash
+cat > ~/.bash_profile << "EOF"
+  exec env -i HOME=$HOME TERM=$TERM PS1='\u:\w\$ ' /bin/bash
+EOF
+```
+
+

@@ -30,6 +30,7 @@ export type MDXEntry<T> = T & { href: string; metadata: T }
 export interface Section {
   id: string
   title: string
+  child: { id: string; title: string }[]
 }
 
 export interface Article {
