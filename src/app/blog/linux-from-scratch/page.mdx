@@ -36,15 +36,49 @@ export const sections = [
     id: 'preparing-host-system',
     title: 'Preparing Host System',
     child: [
-      { id: 'virtualizing-debian', title: 'Virtualizing Debian' },
-      { id: 'installing-debian', title: 'Installing Debian' },
-      { id: 'setting-up-debian', title: 'Setting up Debian' },
-      { id: 'system-requirements', title: 'System requirements' },
+      { id: 'base-system', title: 'Base system', child: [
+        { id: 'virtualizing-debian', title: 'Virtualizing Debian' },
+        { id: 'installing-debian', title: 'Installing Debian' },
+        { id: 'setting-up-debian', title: 'Setting up Debian' },
+      ] },
+      { id: 'system-requirements', title: 'System requirements', child: [
+        { id: 'version-check.sh', title: 'version-check.sh' },
+        { id: 'install-lfs-deps.sh', title: 'install-lfs-deps.sh' },
+      ] },
       { id: 'creating-snapshot', title: 'Creating snapshot' },
-      { id: 'partitioning', title: 'Partitioning' },
-      { id: 'creating-file-system', title: 'Creating a file system' },
-      { id: 'base-system-packages', title: 'Base system packages' },
-      { id: 'final-preparations', title: 'Final preparations' },
+      { id: 'partitioning', title: 'Partitioning', child: [
+        { id: 'add-new-disk', title: 'Add new disk' },
+        { id: 'create-gpt-partition-table', title: 'Create GPT partition table' },
+        { id: 'create-partitions', title: 'Create partitions' },
+        { id: 'format-partitions', title: 'Format partitions' },
+        { id: 'mount-partitions', title: 'Mount partitions' },
+      ] },
+      { id: 'base-system-packages', title: 'Base system packages', child: [
+        { id: 'download-packages', title: 'Download packages' },
+        { id: 'verify-downloaded-packages', title: 'Verify downloaded packages', child: [
+          { id: 'fix-expat-2.6.4-error', title: 'Fix expat 2.6.4 error' },
+        ] },
+      ] },
+      { id: 'final-preparations', title: 'Final preparations', child: [
+        { id: 'creating-tree-structure', title: 'Creating tree structure' },
+        { id: 'creating-lfs-user', title: 'Creating lfs user' },
+      ] },
+    ],
+  },
+  {
+    id: 'building-lfs',
+    title: 'Building the LFS',
+    child: [
+      { 
+        id: 'package-compilation', 
+        title: 'Package compilation', 
+        child: [
+          { id: 'binutils', title: 'Binutils' },
+          { id: 'gcc', title: 'GCC' },
+          { id: 'linux-api-headers', title: 'Linux API headers' },
+          { id: 'glibc', title: 'Glibc' },
+        ] 
+      },
     ],
   },
 ]
@@ -216,7 +250,7 @@ Now, we are part of the sudo group.
 
 ### System requirements {{ id: 'system-requirements' }}
 
-the official guide provides us with the following script to verify the necessary dependencies.
+the official guide provides us with the following script to verify the necessary dependencies. {{ id: 'version-check.sh' }}
 
 ```bash
 cat > version-check.sh << "EOF"
@@ -330,7 +364,8 @@ sudo apt install <PACKAGE_NAME>
 
 Keep in mind that you will have to download the developer's packages in case it exists, for debian-based distros, they usually have the termination `-dev`, but on some other systems it is `-devel`.
 
-But in my case I decided to create a script called `install-lfs-deps.sh` to automate that process.
+But in my case I decided to create a script called `install-lfs-deps.sh` to automate that process. {{ id: 'install-lfs-deps.sh' }}
+
 
 ```bash
 #!/bin/bash
@@ -453,6 +488,8 @@ Linux From Scratch like most other operating systems is usually installed on a d
 
 At this point, we are going to add a new disk whare we will store our LFS, first we must turn off our virtual machine.
 
+### Add new disk {{ id: 'add-new-disk' }}
+
 If we are in **VMWare**, we will double click on _Hard Disk (SCSI)_.
 
 ![Hardware specifications](/src/app/blog/linux-from-scratch/images/hardware_specifications.png)
@@ -482,6 +519,8 @@ sudo lsblk
 ![lsblk print](/src/app/blog/linux-from-scratch/images/lsblk_print.png)
 
 And we can visualize our new disk `sdb`.
+
+### Create GPT partition table {{ id: 'create-gpt-partition-table' }}
 
 Let's start by creating a new partition table for the disk with `fdisk`.
 
@@ -520,7 +559,9 @@ Calling ioctl() to re-read partition table.
 Syncing disks.
 ```
 
-Now we just need tot start partitioning the disk, we will be using `cfdisk` as partition editor.
+### Create partitions {{ id: 'create-partitions' }}
+
+Now we just need to start partitioning the disk, we will be using `cfdisk` as partition editor.
 
 ```bash
 sudo cfdisk /dev/sdb
@@ -563,8 +604,7 @@ Is mostly used for mechanical hard disks.
 
 ![Compare partitioning of disks](/src/app/blog/linux-from-scratch/images/compare_partitioning.png)
 
-### Creating a file system {{ id: 'creating-file-system' }}
-
+### Format partitions {{ id: 'format-partitions' }}
 Then we need to assign a **ext4** file system to root and home partition, we are going to be using `mkfs`.
 
 ```bash
@@ -609,6 +649,8 @@ entr0phy4@debian:~$ sudo mkdir -pv $LFS
 mkdir: created directory '/mnt/lfs'
 ```
 
+### Mount partitions {{ id: 'mount-partitions' }}
+
 With this we have created the `$LFS` directory, now we will mount the `root` partitions to it.
 
 ```bash
@@ -630,7 +672,7 @@ content of `/mnt/lfs` we should see the following:
 
 ![Content of $LFS](/src/app/blog/linux-from-scratch/images/lfs_content.png)
 
-### Base system packages {{ id: 'base-system-packages' }}
+## Base system packages {{ id: 'base-system-packages' }}
 
 For this point, let's create a directory to store the packages and patches.
 
@@ -645,6 +687,8 @@ this is to only the owner of a file can delete or modify it.
 entr0phy4@debian:~$ sudo chmod -v a+wt $LFS/sources
 mode of '/mnt/lfs/sources' changed to 0755 (rwxr-xr-x) to 1777 (rwxrwxrwt)
 ```
+
+### Download packages {{ id: 'download-packages' }}
 
 Now we will download the packages and patches from the `lfs-packages` repository.
 
@@ -683,6 +727,8 @@ And we can see the packages in the `$LFS/sources` directory.
 
 ![Packages in $LFS/sources](/src/app/blog/linux-from-scratch/images/packages_in_lfs_sources.png)
 
+### Verify downloaded packages {{ id: 'verify-downloaded-packages' }}
+
 Now, let's verify the integrity of the downloaded packages. First, let's download the MD5 checksums file:
 
 ```bash
@@ -699,6 +745,8 @@ And we should see something like this:
 
 ![md5sum verification](/src/app/blog/linux-from-scratch/images/md5sum_verification.png)
 
+### Fix expat 2.6.4 error {{ id: 'fix-expat-2.6.4-error' }}
+
 In our case, all the packages have been downloaded correctly except `expat-2.6.4.tar.xz`.
 So we need to download it manually.
 
@@ -711,7 +759,7 @@ So click on the link and download the file `expat-2.6.4.tar.xz`.
 Once we have the file, we will move it to the `$LFS/sources` directory.
 
 ```bash
-mv expat-2.6.4.tar.xz $LFS/sources
+mv ~/Downloads/expat-2.6.4.tar.xz $LFS/sources
 ```
 
 and check again the md5sum of the files.
@@ -740,7 +788,7 @@ You can check the owner of the files with `ls -l $LFS/sources`.
 
 Now we need to become root user for the rest of the process. This is necessary because we'll be performing operations in `$LFS` directory that require elevated privileges.
 
-#### Creating tree directory structure {{ id: 'creating-tree-structure' }}
+### Creating tree directory structure {{ id: 'creating-tree-structure' }}
 
 We need create the tree structure for our LFS.
 
@@ -811,10 +859,364 @@ From now, we will be working as `lfs` user.
 
 ### Setting up environment variables {{ id: 'setting-up-environment-variables' }}
 
+Once we are the user `lfs` we will modify the `.bash_profile` and `.bashrc` for `lfs` user.
+
+First, we will create a new file called `.bash_profile` which not should exist, and add the following content:
+
 ```bash
 cat > ~/.bash_profile << "EOF"
   exec env -i HOME=$HOME TERM=$TERM PS1='\u:\w\$ ' /bin/bash
 EOF
 ```
+
+Now, we should have a file called `.bash_profile` in our home directory with that content.
+
+![.bash_profile](/src/app/blog/linux-from-scratch/images/lfs_bash_profile.png)
+
+Now, we will create the `.bashrc` file, which should also not exist, and add the following content:
+
+```bash
+cat > ~/.bashrc << "EOF"
+set +h
+umask 022
+LFS=/mnt/lfs
+LC_ALL=POSIX
+LFS_TGT=$(uname -m)-lfs-linux-gnu
+PATH=/usr/bin
+if [ ! -L /bin ]; then PATH=/bin:$PATH; fi
+PATH=$LFS/tools/bin:$PATH
+CONFIG_SITE=$LFS/usr/share/config.site
+export LFS LC_ALL LFS_TGT PATH CONFIG_SITE
+EOF
+```
+
+Now, we should have a file called `.bashrc` in our home directory with that content.
+
+![.bashrc](/src/app/blog/linux-from-scratch/images/lfs_bashrc.png)
+
+
+
+
+Now, we will source the `.bash_profile` and `.bashrc` files.
+
+```bash
+source ~/.bash_profile
+source ~/.bashrc
+```
+
+With this ready, we can start the compilation of the base system.
+
+
+
+<SectionHeading id="building-lfs" number="4">
+  Building the LFS
+</SectionHeading>
+
+## Package compilation {{ id: 'package-compilation' }}
+
+This is where the real work of building a new system begins.
+
+We are going to place ourselves in the `$LFS/sources` directory.
+
+```bash
+cd $LFS/sources
+```
+
+And here we will start the compilation of the base system packages.
+
+### Binutils {{ id: 'binutils' }}
+
+First, we must unzip the package `binutils-2.44.tar.xz`.
+
+```bash
+tar -xf binutils-2.44.tar.xz
+```
+
+And we will enter the directory.
+
+```bash
+cd binutils-2.44
+```
+
+Once inside, we must create a directory called `build` and enter it.
+
+```bash
+mkdir -v build
+cd build
+```
+
+Now, we will configure the build.
+
+```bash
+../configure --prefix=$LFS/tools \
+             --with-sysroot=$LFS \
+             --target=$LFS_TGT   \
+             --disable-nls       \
+             --enable-gprofng=no \
+             --disable-werror    \
+             --enable-new-dtags  \
+             --enable-default-hash-style=gnu
+```
+
+We should see a output like this:
+
+![Binutils configuration](/src/app/blog/linux-from-scratch/images/configure_binutils.png)
+
+Now, we will compile the package.
+
+```bash
+make
+```
+
+This could take a few minutes.
+
+Once finished we will perform the installation.
+
+```bash
+make install
+```
+
+If no errors occur, we should have the utility installed so go again to the `$LFS/sources` directory.
+
+### GCC {{ id: 'gcc' }}
+
+This package depends at the same time on three other packages: `mpfr`, `gmp` and `mpc`.
+
+So once extracted.
+
+```bash
+tar -xf gcc-14.2.0.tar.xz
+```
+
+We will enter the directory.
+
+```bash
+cd gcc-14.2.0
+```
+
+And we will bring the three necessary packages.
+
+```bash
+tar -xf ../mpfr-4.2.1.tar.xz
+mv -v mpfr-4.2.1 mpfr
+tar -xf ../gmp-6.3.0.tar.xz
+mv -v gmp-6.3.0 gmp
+tar -xf ../mpc-1.3.1.tar.gz
+mv -v mpc-1.3.1 mpc
+```
+
+![Extracted gcc packages](/src/app/blog/linux-from-scratch/images/unzip_gcc.png)
+
+```bash
+case $(uname -m) in
+  x86_64)
+    sed -e '/m64=/s/lib64/lib/' \
+        -i.orig gcc/config/i386/t-linux64
+ ;;
+esac
+```
+
+This will set a default directory name for 64-bit libraries to `lib`.
+
+Now the same story, create a build folder and get into it.
+
+```bash
+mkdir -v build
+cd build
+```
+
+Configure the build.
+
+```bash
+../configure                  \
+    --target=$LFS_TGT         \
+    --prefix=$LFS/tools       \
+    --with-glibc-version=2.41 \
+    --with-sysroot=$LFS       \
+    --with-newlib             \
+    --without-headers         \
+    --enable-default-pie      \
+    --enable-default-ssp      \
+    --disable-nls             \
+    --disable-shared          \
+    --disable-multilib        \
+    --disable-threads         \
+    --disable-libatomic       \
+    --disable-libgomp         \
+    --disable-libquadmath     \
+    --disable-libssp          \
+    --disable-libvtv          \
+    --disable-libstdcxx       \
+    --enable-languages=c,c++
+```
+
+and compile the package.
+
+```bash
+make
+```
+
+This one could last almost three times longer than the previous one.
+
+Once finished, if no errors occur, the output should be similar to this:
+
+![GCC compilation](/src/app/blog/linux-from-scratch/images/gcc_compiled.png)
+
+Now let's install.
+
+```bash
+make install
+```
+
+Now we are going to create a complete version of the internal system header.
+This same command is used by the `gcc` compilation process but his creates the headers in a partial way.
+
+```bash
+cd ..
+cat gcc/limitx.h gcc/glimits.h gcc/limity.h > \
+  `dirname $($LFS_TGT-gcc -print-libgcc-file-name)`/include/limits.h
+```
+
+### Linux API Headers {{ id: 'linux-api-headers' }}
+
+This package is a collection of the internal system header files for the Linux kernel.
+
+So first we unzip the package.
+
+```bash
+tar -xf linux-6.13.4.tar.xz
+```
+
+And we will enter the directory.
+
+```bash
+cd linux-6.13.4
+```
+
+Now make sure there are no stale files embedded in the package.
+
+```bash
+make mrproper
+```
+
+Now we extract the user-visible kernel headers from the source.
+
+```bash
+make headers
+```
+
+![Linux API headers](/src/app/blog/linux-from-scratch/images/linux_kernel_headers.png)
+
+The headers are saved in the `/usr` directory, so we need to copy them to the `$LFS/usr` directory.
+
+```bash
+find usr/include -type f ! -name '*.h' -delete
+cp -rv usr/include $LFS/usr
+```
+
+### Glibc {{ id: 'glibc' }}
+
+This library provides the basic routines for the C programming language.
+
+Let's unzip the package.
+
+```bash
+tar -xf glibc-2.41.tar.xz
+```
+
+And we will enter the directory.
+
+```bash
+cd glibc-2.41
+```
+
+First, create a symbolic link for LSB compliance. Additionally, for x86_64, create a compatibility symbolic link required for proper operation of the dynamic library loader:
+
+```bash
+case $(uname -m) in
+    i?86)   ln -sfv ld-linux.so.2 $LFS/lib/ld-lsb.so.3
+    ;;
+    x86_64) ln -sfv ../lib/ld-linux-x86-64.so.2 $LFS/lib64
+            ln -sfv ../lib/ld-linux-x86-64.so.2 $LFS/lib64/ld-lsb-x86-64.so.3
+    ;;
+esac
+```
+
+Apply the patch to the source code.
+
+```bash
+patch -Np1 -i ../glibc-2.41-fhs-1.patch
+```
+
+Now we will create a build directory and enter it.
+
+```bash
+mkdir -v build
+cd build
+```
+
+Configure the build.
+
+```bash
+../configure                             \
+      --prefix=/usr                      \
+      --host=$LFS_TGT                    \
+      --build=$(../scripts/config.guess) \
+      --enable-kernel=5.4                \
+      --with-headers=$LFS/usr/include    \
+      --disable-nscd                     \
+      libc_cv_slibdir=/usr/lib
+```
+
+Let's compile the package.
+
+<TopTip>
+There have been reports that this package may fail when building as a "parallel make." If that occurs, rerun the make command with the `-j1` option.
+</TopTip>
+
+```bash
+make
+```
+
+Now we will install the package.
+
+```bash
+make DESTDIR=$LFS install
+```
+
+Fix a hard coded path to the executable loader in the ldd script:
+
+```bash
+sed '/RTLDLIST=/s@/usr@@g' -i $LFS/usr/bin/ldd
+```
+
+Once this is done we apply the following commands to validate the basic functions (compiler, linker, etc) are working.
+
+```bash
+echo 'int main(){}' | $LFS_TGT-gcc -xc -
+readelf -l a.out | grep ld-linux
+```
+
+We should see the following output:
+
+![GCC validation](/src/app/blog/linux-from-scratch/images/check_glibc.png)
+
+if all is ok, remove the file `a.out`.
+
+```bash
+rm -v a.out
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
 
