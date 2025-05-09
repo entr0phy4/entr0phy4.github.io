@@ -8,7 +8,7 @@ export function RenderTags({ tags }: { tags: string[] }) {
   }
 
   return tags.map((tag, index) => (
-    <span className="px-1 text-white" key={index}>
+    <span className="pr-1 text-white" key={index}>
       <Badge color={getRandomColorClass()}>{tag}</Badge>
     </span>
   ))
