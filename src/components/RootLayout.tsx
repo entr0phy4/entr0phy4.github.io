@@ -150,8 +150,8 @@ function Navigation() {
         <NavigationItem href="/about">About Me</NavigationItem>
       </NavigationRow>
       <NavigationRow>
-        {/* <NavigationItem href="/process">My Process</NavigationItem> */}
         <NavigationItem href="/blog">Blog</NavigationItem>
+        <NavigationItem href="/changelog">Changelog</NavigationItem>
       </NavigationRow>
     </nav>
   )
