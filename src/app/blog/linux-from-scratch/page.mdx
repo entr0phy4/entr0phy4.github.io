@@ -66,19 +66,55 @@ export const sections = [
     ],
   },
   {
+    id: 'cross-toolchain-and-temporary-tools',
+    title: 'Cross Toolchain and Temporary Tools',
+    child: [
+      { 
+        id: 'cross-toolchain', 
+        title: 'Compiling a Cross-Toolchain', 
+        child: [
+          { id: 'binutils-phase1', title: 'Binutils phase 1' },
+          { id: 'gcc-phase1', title: 'GCC phase 1' },
+          { id: 'linux-api-headers', title: 'Linux API headers' },
+          { id: 'glibc', title: 'Glibc' },
+          { id: 'libstdc++', title: 'Libstdc++' },
+        ] 
+      },
+      {
+        id: 'cross-compiling-temporary-tools',
+        title: 'Cross-compiling Temporary Tools',
+        child: [
+          { id: 'M4-1.4.19', title: 'M4' },
+          { id: 'ncurses', title: 'Ncurses' },
+          { id: 'bash', title: 'Bash' },
+          { id: 'coreutils', title: 'Coreutils' },
+          { id: 'diffutils', title: 'Diffutils' },
+          { id: 'file', title: 'File' },
+          { id: 'findutils', title: 'Findutils' },
+          { id: 'gawk', title: 'Gawk' },
+          { id: 'grep', title: 'Grep' },
+          { id: 'gzip', title: 'Gzip' },
+          { id: 'make', title: 'Make' },
+          { id: 'patch', title: 'Patch' },
+          { id: 'sed', title: 'Sed' },
+          { id: 'tar', title: 'Tar' },
+          { id: 'xz', title: 'Xz' },
+          { id: 'binutils-phase2', title: 'Binutils phase 2' },
+          { id: 'gcc-phase2', title: 'GCC phase 2' },
+        ]
+      },
+      { id: 'entering-chroot-additional-temporary-tools', 
+        title: 'Entering Chroot and Building additional temporary tools',
+        child: [
+        ]
+      },
+    ],
+  },
+  {
     id: 'building-lfs',
     title: 'Building the LFS',
     child: [
-      { 
-        id: 'package-compilation', 
-        title: 'Package compilation', 
-        child: [
-          { id: 'binutils', title: 'Binutils' },
-          { id: 'gcc', title: 'GCC' },
-          { id: 'linux-api-headers', title: 'Linux API headers' },
-          { id: 'glibc', title: 'Glibc' },
-        ] 
-      },
+      { id: 'installing-lfs', title: 'Installing LFS' },
     ],
   },
 ]
@@ -88,7 +124,7 @@ export const metadata = {
   description: article.description,
 }
 
-<SectionHeading id="table-of-contents" number="1">
+<SectionHeading id="table-of-contents" number="0">
   Table of contents
 </SectionHeading>
 
@@ -99,13 +135,13 @@ export const metadata = {
 
 Link to the official guide: [Linux From Scratch](https://www.linuxfromscratch.org/lfs/view/stable)
 
-<SectionHeading id="introduction" number="2">
+<SectionHeading id="introduction" number="1">
   Introduction
 </SectionHeading>
 
 ### Background {{ id: 'background' }}
 
-<SectionHeading id="preparing-host-system" number="3">
+<SectionHeading id="preparing-host-system" number="2">
   Preparing Host System
 </SectionHeading>
 
@@ -908,11 +944,11 @@ With this ready, we can start the compilation of the base system.
 
 
 
-<SectionHeading id="building-lfs" number="4">
-  Building the LFS
+<SectionHeading id="cross-toolchain-and-temporary-tools" number="3">
+  Cross Toolchain and Temporary Tools
 </SectionHeading>
 
-## Package compilation {{ id: 'package-compilation' }}
+## Compiling a Cross-Toolchain {{ id: 'cross-toolchain' }}
 
 This is where the real work of building a new system begins.
 
@@ -924,7 +960,7 @@ cd $LFS/sources
 
 And here we will start the compilation of the base system packages.
 
-### Binutils {{ id: 'binutils' }}
+### Binutils {{ id: 'binutils-phase1' }}
 
 First, we must unzip the package `binutils-2.44.tar.xz`.
 
@@ -978,7 +1014,7 @@ make install
 
 If no errors occur, we should have the utility installed so go again to the `$LFS/sources` directory.
 
-### GCC {{ id: 'gcc' }}
+### GCC {{ id: 'gcc-phase1' }}
 
 This package depends at the same time on three other packages: `mpfr`, `gmp` and `mpc`.
 
@@ -1207,16 +1243,438 @@ if all is ok, remove the file `a.out`.
 rm -v a.out
 ```
 
+### Libstdc++ {{ id: 'libstdc++' }}
 
+This package is the standard C++ library. It is needed to compile `c++` code.
 
+For this process we must delete the folder we extracted earlier for `gcc-14.2.0`.
 
+```bash
+rm -rf gcc-14.2.0
+```
 
+And unzip again the tar file.
 
+```bash
+tar -xf gcc-14.2.0.tar.xz
+```
 
+And we will enter the directory.
 
+```bash
+cd gcc-14.2.0
+```
 
+Now we will create a build directory and enter it.
 
+```bash
+mkdir -v build
+cd build
+```
 
+And configure the build with this parameters:
 
+```bash
+../libstdc++-v3/configure           \
+    --host=$LFS_TGT                 \
+    --build=$(../config.guess)      \
+    --prefix=/usr                   \
+    --disable-multilib              \
+    --disable-nls                   \
+    --disable-libstdcxx-pch         \
+    --with-gxx-include-dir=/tools/$LFS_TGT/include/c++/14.2.0
+```
 
+Let's compile the package.
+
+```bash
+make
+```
+
+and install the package.
+
+```bash
+make DESTDIR=$LFS install
+```
+
+And we remove the libtool archive files.
+
+```bash
+rm -v $LFS/usr/lib/lib{stdc++{,exp,fs},supc++}.la
+```
+
+## Cross-compiling Temporary Tools {{ id: 'cross-compiling-temporary-tools' }}
+
+### M4 {{ id: 'M4-1.4.19' }}
+
+The M4 package contains a macro processor.
+
+The process for the compilation is usually very similar so we will be less specific with the steps from now on.
+
+Once unzipped the package, we will enter the directory, configure the build, compile and install.
+
+```bash
+tar -xf m4-1.4.19.tar.xz
+cd m4-1.4.19
+./configure --prefix=/usr   \
+            --host=$LFS_TGT \
+            --build=$(build-aux/config.guess)
+  
+make
+make DESTDIR=$LFS install
+```
+
+### Ncurses {{ id: 'ncurses' }}
+
+The Ncurses package contains libraries for terminal-independent handling of character screens.
+
+First, build the "tic" program on the build host:
+
+```bash
+tar -xvf ncurses-6.5.tar.gz
+cd ncurses-6.5
+mkdir build
+pushd build
+  ../configure AWK=gawk
+  make -C include
+  make -C progs tic
+popd
+```
+
+Now, prepare **Ncurses**.
+
+```bash
+./configure --prefix=/usr                \
+            --host=$LFS_TGT              \
+            --build=$(./config.guess)    \
+            --mandir=/usr/share/man      \
+            --with-manpage-format=normal \
+            --with-shared                \
+            --without-normal             \
+            --with-cxx-shared            \
+            --without-debug              \
+            --without-ada                \
+            --disable-stripping          \
+            AWK=gawk
+
+make
+make DESTDIR=$LFS TIC_PATH=$(pwd)/build/progs/tic install
+ln -sv libncursesw.so $LFS/usr/lib/libncurses.so
+sed -e 's/^#if.*XOPEN.*$/#if 1/' \
+    -i $LFS/usr/include/curses.h
+```
+
+### Bash {{ id: 'bash' }}
+
+The Bash package contains the Buourne-Again Shell.
+
+Unzip the package, enter the directory, configure the build, compile and install.
+
+```bash
+tar -xvf bash-5.2.37.tar.gz
+cd bash-5.2.37
+./configure --prefix=/usr                      \
+            --build=$(sh support/config.guess) \
+            --host=$LFS_TGT                    \
+            --without-bash-malloc
+make
+make DESTDIR=$LFS install
+ln -sv bash $LFS/bin/sh
+```
+
+### Coreutils {{ id: 'coreutils' }}
+
+The Coreutils package contains the basic utility programs needed by every operating system.
+
+```bash
+tar -xvf coreutils-9.6.tar.xz
+cd coreutils-9.6
+./configure --prefix=/usr                     \
+            --host=$LFS_TGT                   \
+            --build=$(build-aux/config.guess) \
+            --enable-install-program=hostname \
+            --enable-no-install-program=kill,uptime
+make
+make DESTDIR=$LFS install
+mv -v $LFS/usr/bin/chroot              $LFS/usr/sbin
+mkdir -pv $LFS/usr/share/man/man8
+mv -v $LFS/usr/share/man/man1/chroot.1 $LFS/usr/share/man/man8/chroot.8
+sed -i 's/"1"/"8"/'                    $LFS/usr/share/man/man8/chroot.8
+```
+
+### Diffutils {{ id: 'diffutils' }}
+
+The Diffutils package contains programs that show the differences between files or directories.
+
+```bash
+tar -xvf diffutils-3.11.tar.xz 
+cd diffutils-3.11
+./configure --prefix=/usr   \
+            --host=$LFS_TGT \
+            --build=$(./build-aux/config.guess)
+make
+make DESTDIR=$LFS install
+```
+
+### File {{ id: 'file' }}
+
+The File package contains a utility for determining the type of a given file or files.
+
+```bash
+tar -xvf file-5.46.tar.gz
+cd file-5.46
+mkdir build
+pushd build
+  ../configure --disable-bzlib      \
+               --disable-libseccomp \
+               --disable-xzlib      \
+               --disable-zlib
+  make
+popd
+./configure --prefix=/usr --host=$LFS_TGT --build=$(./config.guess)
+make FILE_COMPILE=$(pwd)/build/src/file
+make DESTDIR=$LFS install
+rm -v $LFS/usr/lib/libmagic.la
+```
+
+### Findutils {{ id: 'findutils' }}
+
+The findutils package contains programs to find files.
+
+```bash
+tar -xvf findutils-4.10.0.tar.xz
+cd findutils-4.10.0
+./configure --prefix=/usr                   \
+            --localstatedir=/var/lib/locate \
+            --host=$LFS_TGT                 \
+            --build=$(build-aux/config.guess)
+make
+make DESTDIR=$LFS install
+```
+
+### Gawk {{ id: 'gawk' }}
+
+The Gawk package contains programs for manipulating text files.
+
+```bash
+tar -xvf gawk-5.3.1.tar.xz
+cd gawk-5.3.1
+sed -i 's/extras//' Makefile.in
+./configure --prefix=/usr   \
+            --host=$LFS_TGT \
+            --build=$(build-aux/config.guess)
+make
+make DESTDIR=$LFS install
+```
+
+### Grep {{ id: 'grep' }}
+
+The Grep package contains programs for searching through the contents of files.
+
+```bash
+tar -xvf grep-3.11.tar.xz
+cd grep-3.11
+./configure --prefix=/usr   \
+            --host=$LFS_TGT \
+            --build=$(./build-aux/config.guess)
+make
+make DESTDIR=$LFS install
+```
+
+### Gzip {{ id: 'gzip' }}
+
+The Gzip package contains programs for compressing and decompressing files.
+
+```bash
+tar -xvf gzip-1.13.tar.xz
+cd gzip-1.13
+./configure --prefix=/usr --host=$LFS_TGT
+make
+make DESTDIR=$LFS install
+```
+
+### Make {{ id: 'make' }}
+
+The Make package contains a program for controlling the generation of executables and other non-source files of a package from source files.
+
+```bash
+tar -xvf make-4.4.1.tar.gz
+cd make-4.4.1
+./configure --prefix=/usr   \
+            --without-guile \
+            --host=$LFS_TGT \
+            --build=$(build-aux/config.guess)
+make
+make DESTDIR=$LFS install
+```
+
+### Patch {{ id: 'patch' }}
+
+The Patch package contains a program for modifying or creating files by applying a "Patch"
+file typically created by the _diff_ program.
+
+```bash
+tar -xvf patch-2.7.6.tar.xz
+cd patch-2.7.6
+./configure --prefix=/usr   \
+            --host=$LFS_TGT \
+            --build=$(build-aux/config.guess)
+make
+make DESTDIR=$LFS install
+```
+
+### Sed {{ id: 'sed' }}
+
+The Sed package contains a stream editor.
+
+```bash
+tar -xvf sed-4.9.tar.xz
+cd sed-4.9
+./configure --prefix=/usr   \
+            --host=$LFS_TGT \
+            --build=$(./build-aux/config.guess)
+make
+make DESTDIR=$LFS install
+```
+
+### Tar {{ id: 'tar' }}
+
+The Tar package provides the ability to create tar archives as well
+as perform various other kinds of archive manipulation. Tar can be used
+on previously created archives to extract files, to store additional
+files, or to update or list files which were already stored.
+
+```bash
+tar -xvf tar-1.35.tar.xz
+cd tar-1.35
+./configure --prefix=/usr                     \
+            --host=$LFS_TGT                   \
+            --build=$(build-aux/config.guess)
+make
+make DESTDIR=$LFS install
+```
+
+### Xz {{ id: 'xz' }}
+
+The Xz package contains programs for compressing and decompressing files.
+
+```bash
+tar -xvf xz-5.6.4.tar.xz
+cd xz-5.6.4
+./configure --prefix=/usr                     \
+            --host=$LFS_TGT                   \
+            --build=$(build-aux/config.guess) \
+            --disable-static                  \
+            --docdir=/usr/share/doc/xz-5.6.4
+make
+make DESTDIR=$LFS install
+rm -v $LFS/usr/lib/liblzma.la
+```
+
+### Binutils phase 2 {{ id: 'binutils-phase2' }}
+
+The Binutils package contains a linker, an assembler, and other tools for handling object files. 
+
+For second phase of the compilation we will eliminate the previous folder and extract again the source code.
+
+```bash
+rm -rf binutils-2.44/
+tar -xvf binutils-2.44.tar.xz
+cd binutils-2.44
+sed '6031s/$add_dir//' -i ltmain.sh
+```
+
+Now, we will configure the build, compile and install.
+
+```bash
+mkdir -v build
+cd       build
+../configure                   \
+    --prefix=/usr              \
+    --build=$(../config.guess) \
+    --host=$LFS_TGT            \
+    --disable-nls              \
+    --enable-shared            \
+    --enable-gprofng=no        \
+    --disable-werror           \
+    --enable-64-bit-bfd        \
+    --enable-new-dtags         \
+    --enable-default-hash-style=gnu
+make
+make DESTDIR=$LFS install
+rm -v $LFS/usr/lib/lib{bfd,ctf,ctf-nobfd,opcodes,sframe}.{a,la}
+```
+
+### GCC phase 2 {{ id: 'gcc-phase2' }}
+
+The GCC package contains the GNU compiler collection, which includes the C and C++ compilers. 
+
+So again, we will eliminate the previous folder and extract again the source code.
+
+```bash
+rm -rf gcc-14.2.0/
+tar -xvf gcc-14.2.0.tar.xz
+cd gcc-14.2.0
+```
+
+We bring the dependencies.
+
+```bash
+tar -xf ../mpfr-4.2.1.tar.xz
+mv -v mpfr-4.2.1 mpfr
+tar -xf ../gmp-6.3.0.tar.xz
+mv -v gmp-6.3.0 gmp
+tar -xf ../mpc-1.3.1.tar.gz
+mv -v mpc-1.3.1 mpc
+```
+
+If building on x86_64, change the default directory name for 64-bit libraries to “lib”: 
+
+```bash
+case $(uname -m) in
+  x86_64)
+    sed -e '/m64=/s/lib64/lib/' \
+        -i.orig gcc/config/i386/t-linux64
+  ;;
+esac
+```
+
+Override the building rule of libgcc and libstdc++ headers, to allow building these libraries with POSIX threads support: 
+
+```bash
+sed '/thread_header =/s/@.*@/gthr-posix.h/' \
+    -i libgcc/Makefile.in libstdc++-v3/include/Makefile.in
+```
+
+Now, we will configure the build, compile and install.
+
+```bash
+mkdir -v build
+cd       build
+../configure                                       \
+    --build=$(../config.guess)                     \
+    --host=$LFS_TGT                                \
+    --target=$LFS_TGT                              \
+    LDFLAGS_FOR_TARGET=-L$PWD/$LFS_TGT/libgcc      \
+    --prefix=/usr                                  \
+    --with-build-sysroot=$LFS                      \
+    --enable-default-pie                           \
+    --enable-default-ssp                           \
+    --disable-nls                                  \
+    --disable-multilib                             \
+    --disable-libatomic                            \
+    --disable-libgomp                              \
+    --disable-libquadmath                          \
+    --disable-libsanitizer                         \
+    --disable-libssp                               \
+    --disable-libvtv                               \
+    --enable-languages=c,c++
+make
+make DESTDIR=$LFS install
+ln -sv gcc $LFS/usr/bin/cc
+```
+
+This will take a while.
+
+### Entering Chroot and Building additional temporary tools {{ id: 'entering-chroot-additional-temporary-tools' }}
 
