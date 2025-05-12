@@ -30,55 +30,89 @@ export const sections = [
   {
     id: 'introduction',
     title: 'Introduction',
-    child: [{ id: 'background', title: 'Background' }],
+    child: [
+      { id: 'background', title: 'Background' },
+      { id: 'recomendations', title: 'Recomendations',
+        child: [
+          { id: 'how-create-a-snapshot', title: 'How create a Snapshot (VMWare Workstation)' },
+        ],
+       },
+    ],
   },
   {
     id: 'preparing-host-system',
     title: 'Preparing Host System',
     child: [
-      { id: 'base-system', title: 'Base system', child: [
-        { id: 'virtualizing-debian', title: 'Virtualizing Debian' },
-        { id: 'installing-debian', title: 'Installing Debian' },
-        { id: 'setting-up-debian', title: 'Setting up Debian' },
-      ] },
-      { id: 'system-requirements', title: 'System requirements', child: [
-        { id: 'version-check.sh', title: 'version-check.sh' },
-        { id: 'install-lfs-deps.sh', title: 'install-lfs-deps.sh' },
-      ] },
+      {
+        id: 'base-system',
+        title: 'Base system',
+        child: [
+          { id: 'virtualizing-debian', title: 'Virtualizing Debian' },
+          { id: 'installing-debian', title: 'Installing Debian' },
+          { id: 'setting-up-debian', title: 'Setting up Debian' },
+        ],
+      },
+      {
+        id: 'system-requirements',
+        title: 'System requirements',
+        child: [
+          { id: 'version-check.sh', title: 'version-check.sh' },
+          { id: 'install-lfs-deps.sh', title: 'install-lfs-deps.sh' },
+        ],
+      },
       { id: 'creating-snapshot', title: 'Creating snapshot' },
-      { id: 'partitioning', title: 'Partitioning', child: [
-        { id: 'add-new-disk', title: 'Add new disk' },
-        { id: 'create-gpt-partition-table', title: 'Create GPT partition table' },
-        { id: 'create-partitions', title: 'Create partitions' },
-        { id: 'format-partitions', title: 'Format partitions' },
-        { id: 'mount-partitions', title: 'Mount partitions' },
-      ] },
-      { id: 'base-system-packages', title: 'Base system packages', child: [
-        { id: 'download-packages', title: 'Download packages' },
-        { id: 'verify-downloaded-packages', title: 'Verify downloaded packages', child: [
-          { id: 'fix-expat-2.6.4-error', title: 'Fix expat 2.6.4 error' },
-        ] },
-      ] },
-      { id: 'final-preparations', title: 'Final preparations', child: [
-        { id: 'creating-tree-structure', title: 'Creating tree structure' },
-        { id: 'creating-lfs-user', title: 'Creating lfs user' },
-      ] },
+      {
+        id: 'partitioning',
+        title: 'Partitioning',
+        child: [
+          { id: 'add-new-disk', title: 'Add new disk' },
+          {
+            id: 'create-gpt-partition-table',
+            title: 'Create GPT partition table',
+          },
+          { id: 'create-partitions', title: 'Create partitions' },
+          { id: 'format-partitions', title: 'Format partitions' },
+          { id: 'mount-partitions', title: 'Mount partitions' },
+        ],
+      },
+      {
+        id: 'base-system-packages',
+        title: 'Base system packages',
+        child: [
+          { id: 'download-packages', title: 'Download packages' },
+          {
+            id: 'verify-downloaded-packages',
+            title: 'Verify downloaded packages',
+            child: [
+              { id: 'fix-expat-2.6.4-error', title: 'Fix expat 2.6.4 error' },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'final-preparations',
+        title: 'Final preparations',
+        child: [
+          { id: 'creating-tree-structure', title: 'Creating tree structure' },
+          { id: 'creating-lfs-user', title: 'Creating lfs user' },
+        ],
+      },
     ],
   },
   {
     id: 'cross-toolchain-and-temporary-tools',
     title: 'Cross Toolchain and Temporary Tools',
     child: [
-      { 
-        id: 'cross-toolchain', 
-        title: 'Compiling a Cross-Toolchain', 
+      {
+        id: 'cross-toolchain',
+        title: 'Compiling a Cross-Toolchain',
         child: [
           { id: 'binutils-phase1', title: 'Binutils phase 1' },
           { id: 'gcc-phase1', title: 'GCC phase 1' },
           { id: 'linux-api-headers', title: 'Linux API headers' },
           { id: 'glibc', title: 'Glibc' },
           { id: 'libstdc++', title: 'Libstdc++' },
-        ] 
+        ],
       },
       {
         id: 'cross-compiling-temporary-tools',
@@ -101,12 +135,29 @@ export const sections = [
           { id: 'xz', title: 'Xz' },
           { id: 'binutils-phase2', title: 'Binutils phase 2' },
           { id: 'gcc-phase2', title: 'GCC phase 2' },
-        ]
+        ],
       },
-      { id: 'entering-chroot-additional-temporary-tools', 
+      {
+        id: 'entering-chroot-additional-temporary-tools',
         title: 'Entering Chroot and Building additional temporary tools',
         child: [
-        ]
+          { id: 'changing-ownership', title: 'Changing Ownership' },
+          { id: 'preparing-virtual-kernel-file-systems', title: 'Preparing virtual Kernel File Systems' },
+          { id: 'entering-the-chroot-environment', title: 'Entering the Chroot Environment' },
+          { id: 'creating-directories', title: 'Creating Directories' },
+          { id: 'creating-essential-files-and-symlinks', title: 'Creating essential files and symlinks' },
+          { id: 'additional-temporary-tools', title: 'Additional temporary tools', child: [
+              { id: 'gettext', title: 'Gettext' },
+              { id: 'bison', title: 'Bison' },
+              { id: 'perl', title: 'Perl' },
+              { id: 'python', title: 'Python' },
+              { id: 'texinfo', title: 'Texinfo' },
+              { id: 'util-linux', title: 'Util-linux' },
+            ],
+          },
+          { id: 'cleaning-up', title: 'Cleaning up' },
+          { id: 'backup', title: 'Backup' },
+        ],
       },
     ],
   },
@@ -114,7 +165,35 @@ export const sections = [
     id: 'building-lfs',
     title: 'Building the LFS',
     child: [
-      { id: 'installing-lfs', title: 'Installing LFS' },
+      { id: 'installing-lfs-software', title: 'Installing LFS software', child: [
+        { id: 'man-pages-lfs', title: 'Man pages in LFS' },
+        { id: 'iana-etc-lfs', title: 'Iana-Etc in LFS' },
+        { id: 'glibc-lfs', title: 'Glibc in LFS' },
+        { id: 'zlib-lfs', title: 'Zlib in LFS' },
+        { id: 'bzip2-lfs', title: 'Bzip2 in LFS' },
+        { id: 'xz-lfs', title: 'Xz in LFS' },
+        { id: 'lz4-lfs', title: 'Lz4 in LFS' },
+        { id: 'zstd-lfs', title: 'Zstd in LFS' },
+        { id: 'file-lfs', title: 'File in LFS' },
+        { id: 'readline-lfs', title: 'Readline in LFS' },
+        { id: 'm4-lfs', title: 'M4 in LFS' },
+        { id: 'bc-lfs', title: 'Bc in LFS' },
+        { id: 'flex-lfs', title: 'Flex in LFS' },
+        { id: 'tcl-lfs', title: 'Tcl in LFS' },
+        { id: 'expect-lfs', title: 'Expect in LFS' },
+        { id: 'dejagnu-lfs', title: 'DejaGNU in LFS' },
+        { id: 'pkgconf-lfs', title: 'Pkgconf in LFS' },
+        { id: 'binutils-lfs', title: 'Binutils in LFS' },
+        { id: 'gmp-lfs', title: 'GMP in LFS' },
+        { id: 'mpfr-lfs', title: 'MPFR in LFS' },
+        { id: 'mpc-lfs', title: 'MPC in LFS' },
+        { id: 'attr-lfs', title: 'Attr in LFS' },
+        { id: 'acl-lfs', title: 'Acl in LFS' },
+        { id: 'libcap-lfs', title: 'Libcap in LFS' },
+        { id: 'libxcrypt-lfs', title: 'Libxcrypt in LFS' },
+        { id: 'shadow-lfs', title: 'Shadow in LFS' },
+        { id: 'gcc-lfs', title: 'GCC in LFS' },
+      ] },
     ],
   },
 ]
@@ -133,13 +212,30 @@ export const metadata = {
   sections={sections}
 />
 
-Link to the official guide: [Linux From Scratch](https://www.linuxfromscratch.org/lfs/view/stable)
-
 <SectionHeading id="introduction" number="1">
   Introduction
 </SectionHeading>
 
 ### Background {{ id: 'background' }}
+### Recomendations {{ id: 'recomendations' }}
+
+#### How create a Snapshot (VMWare Workstation) {{ id: 'how-create-a-snapshot' }}
+
+It is advisable to create a snapshot of the system so as not to lose our progress in case something goes wrong.
+
+If you are using **VMware workstation** for virtualization, in the upper menu, you should have the following options:
+
+![VMware upper menu](/src/app/blog/linux-from-scratch/images/vmware_upper_menu.png)
+
+Set a name and description for the snapshot.
+
+![Snapshot of machine](/src/app/blog/linux-from-scratch/images/snapshot_machine.png)
+
+And our snapshot has been created, in case we have an error we can always return to this point.
+
+![Snapshots timeline](/src/app/blog/linux-from-scratch/images/snapshots_timeline.png)
+
+
 
 <SectionHeading id="preparing-host-system" number="2">
   Preparing Host System
@@ -402,7 +498,6 @@ Keep in mind that you will have to download the developer's packages in case it 
 
 But in my case I decided to create a script called `install-lfs-deps.sh` to automate that process. {{ id: 'install-lfs-deps.sh' }}
 
-
 ```bash
 #!/bin/bash
 set -e
@@ -501,22 +596,6 @@ bash version-check.sh
 ![Version check success output](/src/app/blog/linux-from-scratch/images/version_check_success.png)
 
 We do not get any errors.
-
-### Creating snapshot {{ id: 'creating-snapshot' }}
-
-For this point, it is advisable to create a snapshot of the system so as not to lose our progress in case something goes wrong.
-
-If you are using **VMware workstation** for virtualization, in the upper menu, you should have the following options:
-
-![VMware upper menu](/src/app/blog/linux-from-scratch/images/vmware_upper_menu.png)
-
-Set a name and description for the snapshot.
-
-![Snapshot of machine](/src/app/blog/linux-from-scratch/images/snapshot_machine.png)
-
-And our snapshot has been created, in case we have an error we can always return to this point.
-
-![Snapshots timeline](/src/app/blog/linux-from-scratch/images/snapshots_timeline.png)
 
 ### Partitioning {{ id: 'partitioning' }}
 
@@ -641,6 +720,7 @@ Is mostly used for mechanical hard disks.
 ![Compare partitioning of disks](/src/app/blog/linux-from-scratch/images/compare_partitioning.png)
 
 ### Format partitions {{ id: 'format-partitions' }}
+
 Then we need to assign a **ext4** file system to root and home partition, we are going to be using `mkfs`.
 
 ```bash
@@ -671,7 +751,7 @@ If we see the partitions with their respective file systems (`sudo lsblk -f`), i
 Once with each partition and its respective file system, let's edit root's, and personalized user `.bashrc` file to export the following variable for each shell session.
 
 ```bash
-echo "export LFS=/mnt/lfs" | sudo tee -a /root/.bashrc | tee -a ~/.bashrc 
+echo "export LFS=/mnt/lfs" | sudo tee -a /root/.bashrc | tee -a ~/.bashrc
 ```
 
 If we type `source .bashrc` and `echo $LFS` we should obtain from output `/mnt/lfs`.
@@ -703,7 +783,7 @@ entr0phy4@debian:~$ sudo mount -v -t ext4 /dev/sdb3 $LFS/home
 mount: /dev/sdb3 mounted on /mnt/lfs/home.
 ```
 
-With this we have mounted the partitions to the `$LFS` directory. If we check the 
+With this we have mounted the partitions to the `$LFS` directory. If we check the
 content of `/mnt/lfs` we should see the following:
 
 ![Content of $LFS](/src/app/blog/linux-from-scratch/images/lfs_content.png)
@@ -716,7 +796,7 @@ For this point, let's create a directory to store the packages and patches.
 sudo mkdir -pv $LFS/sources
 ```
 
-And we make that directory writable and set the sticky bit, 
+And we make that directory writable and set the sticky bit,
 this is to only the owner of a file can delete or modify it.
 
 ```bash
@@ -807,7 +887,12 @@ pushd $LFS/sources; md5sum -c ~/md5sums; popd
 In this case all packages pass the verification.
 
 <TopTip>
-If you have any problems with the packages, you can find support with download links in the <u>[official guide](https://www.linuxfromscratch.org/lfs/view/stable/chapter03/packages.html).</u>
+  If you have any problems with the packages, you can find support with download
+  links in the{' '}
+  <u>
+    [official
+    guide](https://www.linuxfromscratch.org/lfs/view/stable/chapter03/packages.html).
+  </u>
 </TopTip>
 
 If we donwload the packages being non-root user, we need to change the owner of the packages to root.
@@ -930,9 +1015,6 @@ Now, we should have a file called `.bashrc` in our home directory with that cont
 
 ![.bashrc](/src/app/blog/linux-from-scratch/images/lfs_bashrc.png)
 
-
-
-
 Now, we will source the `.bash_profile` and `.bashrc` files.
 
 ```bash
@@ -941,8 +1023,6 @@ source ~/.bashrc
 ```
 
 With this ready, we can start the compilation of the base system.
-
-
 
 <SectionHeading id="cross-toolchain-and-temporary-tools" number="3">
   Cross Toolchain and Temporary Tools
@@ -1207,7 +1287,8 @@ Configure the build.
 Let's compile the package.
 
 <TopTip>
-There have been reports that this package may fail when building as a "parallel make." If that occurs, rerun the make command with the `-j1` option.
+  There have been reports that this package may fail when building as a
+  "parallel make." If that occurs, rerun the make command with the `-j1` option.
 </TopTip>
 
 ```bash
@@ -1319,7 +1400,7 @@ cd m4-1.4.19
 ./configure --prefix=/usr   \
             --host=$LFS_TGT \
             --build=$(build-aux/config.guess)
-  
+
 make
 make DESTDIR=$LFS install
 ```
@@ -1407,7 +1488,7 @@ sed -i 's/"1"/"8"/'                    $LFS/usr/share/man/man8/chroot.8
 The Diffutils package contains programs that show the differences between files or directories.
 
 ```bash
-tar -xvf diffutils-3.11.tar.xz 
+tar -xvf diffutils-3.11.tar.xz
 cd diffutils-3.11
 ./configure --prefix=/usr   \
             --host=$LFS_TGT \
@@ -1573,7 +1654,7 @@ rm -v $LFS/usr/lib/liblzma.la
 
 ### Binutils phase 2 {{ id: 'binutils-phase2' }}
 
-The Binutils package contains a linker, an assembler, and other tools for handling object files. 
+The Binutils package contains a linker, an assembler, and other tools for handling object files.
 
 For second phase of the compilation we will eliminate the previous folder and extract again the source code.
 
@@ -1607,7 +1688,7 @@ rm -v $LFS/usr/lib/lib{bfd,ctf,ctf-nobfd,opcodes,sframe}.{a,la}
 
 ### GCC phase 2 {{ id: 'gcc-phase2' }}
 
-The GCC package contains the GNU compiler collection, which includes the C and C++ compilers. 
+The GCC package contains the GNU compiler collection, which includes the C and C++ compilers.
 
 So again, we will eliminate the previous folder and extract again the source code.
 
@@ -1628,7 +1709,7 @@ tar -xf ../mpc-1.3.1.tar.gz
 mv -v mpc-1.3.1 mpc
 ```
 
-If building on x86_64, change the default directory name for 64-bit libraries to “lib”: 
+If building on x86_64, change the default directory name for 64-bit libraries to “lib”:
 
 ```bash
 case $(uname -m) in
@@ -1639,7 +1720,7 @@ case $(uname -m) in
 esac
 ```
 
-Override the building rule of libgcc and libstdc++ headers, to allow building these libraries with POSIX threads support: 
+Override the building rule of libgcc and libstdc++ headers, to allow building these libraries with POSIX threads support:
 
 ```bash
 sed '/thread_header =/s/@.*@/gthr-posix.h/' \
@@ -1678,3 +1759,1307 @@ This will take a while.
 
 ### Entering Chroot and Building additional temporary tools {{ id: 'entering-chroot-additional-temporary-tools' }}
 
+The `chroot` environment is completely insolated from the host operating system, except for the running kernel.
+From now on all the commands must be executed as **root** user and be sure to have
+the **LFS** variable set.
+
+```bash
+su root
+```
+
+### Changing Ownership {{ id: 'changing-ownership' }}
+
+As most of the commands in previous sections were executed as the user **lfs**, 
+now we need to change the ownership to **root** user.
+
+```bash
+chown --from lfs -R root:root $LFS/{usr,lib,var,etc,bin,sbin,tools}
+case $(uname -m) in
+  x86_64) chown --from lfs -R root:root $LFS/lib64 ;;
+esac
+```
+
+### Preparing virtual Kernel File Systems {{ id: 'preparing-virtual-kernel-file-systems' }}
+
+Let's create the directories where the file system will be mounted.
+
+```bash
+mkdir -pv $LFS/{dev,proc,sys,run}
+```
+
+During a normal boot of the LFS system, the kernel automatically mounts the `devtmpfs`
+file system on the `/dev` directory, so we need mount it manually.
+
+```bash
+mount -v --bind /dev $LFS/dev
+```
+
+Now, we mount the remaining virtual kernel file systems.
+
+```bash
+mount -vt devpts devpts -o gid=5,mode=0620 $LFS/dev/pts
+mount -vt proc proc $LFS/proc
+mount -vt sysfs sysfs $LFS/sys
+mount -vt tmpfs tmpfs $LFS/run
+```
+
+In some host systems, `/dev/shm` is a symbolic link to a directory, typically `/run/shm`,
+so we need to mount it.
+
+```bash
+if [ -h $LFS/dev/shm ]; then
+  install -v -d -m 1777 $LFS$(realpath /dev/shm)
+else
+  mount -vt tmpfs -o nosuid,nodev tmpfs $LFS/dev/shm
+fi
+```
+
+### Entering the Chroot Environment {{ id: 'entering-the-chroot-environment' }}
+
+It is time to enter the chroot environment and finish installing temporary tools.
+
+```bash
+chroot "$LFS" /usr/bin/env -i   \
+    HOME=/root                  \
+    TERM="$TERM"                \
+    PS1='(lfs chroot) \u:\w\$ ' \
+    PATH=/usr/bin:/usr/sbin     \
+    MAKEFLAGS="-j$(nproc)"      \
+    TESTSUITEFLAGS="-j$(nproc)" \
+    /bin/bash --login
+```
+
+And we should see something like this:
+
+![Chroot Environment](/src/app/blog/linux-from-scratch/images/chroot_environment.png)
+
+This would basically be the root console of our new distribution.
+
+### Creating Directories {{ id: 'creating-directories' }}
+
+Let's create root-level directories.
+
+```bash
+mkdir -pv /{boot,home,mnt,opt,srv}
+```
+
+And the required set of subdirectories.
+
+```bash
+mkdir -pv /etc/{opt,sysconfig}
+mkdir -pv /lib/firmware
+mkdir -pv /media/{floppy,cdrom}
+mkdir -pv /usr/{,local/}{include,src}
+mkdir -pv /usr/lib/locale
+mkdir -pv /usr/local/{bin,lib,sbin}
+mkdir -pv /usr/{,local/}share/{color,dict,doc,info,locale,man}
+mkdir -pv /usr/{,local/}share/{misc,terminfo,zoneinfo}
+mkdir -pv /usr/{,local/}share/man/man{1..8}
+mkdir -pv /var/{cache,local,log,mail,opt,spool}
+mkdir -pv /var/lib/{color,misc,locate}
+
+ln -sfv /run /var/run
+ln -sfv /run/lock /var/lock
+
+install -dv -m 0750 /root
+install -dv -m 1777 /tmp /var/tmp
+```
+
+In addition to this we must constantly make sure that the `/usr/lib64`
+directory does not exist, this will probably break your system.
+
+### Creating essential files and symlinks {{ id: 'creating-essential-files-and-symlinks' }}
+
+First, we need to satisfy the utilities that solve `/etc/mtab`.
+
+```bash
+ln -sv /proc/self/mounts /etc/mtab
+```
+
+Create a basic `/etc/hosts` file.
+
+```bash
+cat > /etc/hosts << EOF
+127.0.0.1  localhost $(hostname)
+::1        localhost
+EOF
+```
+
+Create the `/etc/passwd` file.
+
+```bash
+cat > /etc/passwd << "EOF"
+root:x:0:0:root:/root:/bin/bash
+bin:x:1:1:bin:/dev/null:/usr/bin/false
+daemon:x:6:6:Daemon User:/dev/null:/usr/bin/false
+messagebus:x:18:18:D-Bus Message Daemon User:/run/dbus:/usr/bin/false
+uuidd:x:80:80:UUID Generation Daemon User:/dev/null:/usr/bin/false
+nobody:x:65534:65534:Unprivileged User:/dev/null:/usr/bin/false
+EOF
+```
+
+Create the `/etc/group` file.
+
+```bash
+cat > /etc/group << "EOF"
+root:x:0:
+bin:x:1:daemon
+sys:x:2:
+kmem:x:3:
+tape:x:4:
+tty:x:5:
+daemon:x:6:
+floppy:x:7:
+disk:x:8:
+lp:x:9:
+dialout:x:10:
+audio:x:11:
+video:x:12:
+utmp:x:13:
+cdrom:x:15:
+adm:x:16:
+messagebus:x:18:
+input:x:24:
+mail:x:34:
+kvm:x:61:
+uuidd:x:80:
+wheel:x:97:
+users:x:999:
+nogroup:x:65534:
+EOF
+```
+
+Soon we will need to do some test with a regular user, 
+so let's create it.
+
+```bash
+echo "tester:x:101:101::/home/tester:/bin/bash" >> /etc/passwd
+echo "tester:x:101:" >> /etc/group
+install -o tester -d /home/tester
+```
+
+At this point we can start a new shell to remove `I have no name!` message.
+
+```bash
+exec /usr/bin/bash --login
+```
+
+And our shell should look like this now:
+
+```bash
+(lfs chroot) root:/# 
+```
+
+Now, let's initialize log files and give them proper permissions.
+
+```bash
+touch /var/log/{btmp,lastlog,faillog,wtmp}
+chgrp -v utmp /var/log/lastlog
+chmod -v 664  /var/log/lastlog
+chmod -v 600  /var/log/btmp
+```
+
+### Additional temporary tools {{ id: 'additional-temporary-tools' }}
+
+Let's move to the `sources` directory to continue installing tools.
+
+```bash
+cd /sources
+```
+
+#### Gettext {{ id: 'gettext' }}
+
+The Gettext package contains utilities for internationalization and localization.
+
+Unzip the package `Gettext`.
+
+```bash
+tar -xvf gettext-0.24.tar.xz 
+cd gettext-0.24
+```
+
+Configure:
+
+```bash
+./configure --disable-shared
+```
+
+And compile:
+
+```bash
+make
+```
+
+Install `msgfmt`, `msgmerge` and `xgettext` programs:
+
+```bash
+cp -v gettext-tools/src/{msgfmt,msgmerge,xgettext} /usr/bin
+```
+
+#### Bison {{ id: 'bison' }}
+
+The Bison package provides a parser generator.
+
+Unzip the package `Bison`, enter the directory, configure, compile and install.
+
+```bash
+tar -xvf bison-3.8.2.tar.xz 
+cd bison-3.8.2
+./configure --prefix=/usr \
+            --docdir=/usr/share/doc/bison-3.8.2
+make 
+make install
+```
+
+#### Perl {{ id: 'perl' }}
+
+The Perl package contains the practical extraction and report language.
+
+Unzip the package `Perl`, enter the directory, configure, compile and install.
+
+```bash
+tar -xvf perl-5.40.1.tar.xz
+cd perl-5.40.1
+sh Configure -des                                         \
+             -D prefix=/usr                               \
+             -D vendorprefix=/usr                         \
+             -D useshrplib                                \
+             -D privlib=/usr/lib/perl5/5.40/core_perl     \
+             -D archlib=/usr/lib/perl5/5.40/core_perl     \
+             -D sitelib=/usr/lib/perl5/5.40/site_perl     \
+             -D sitearch=/usr/lib/perl5/5.40/site_perl    \
+             -D vendorlib=/usr/lib/perl5/5.40/vendor_perl \
+             -D vendorarch=/usr/lib/perl5/5.40/vendor_perl
+make
+make install
+```
+
+#### Python {{ id: 'python' }}
+
+The Python 3 package contains the Python development environment.
+
+Unzip the package of `Python`, enter the directory, configure, compile and install.
+
+<TopTip>
+  There are two package files whose name starts with the "python" prefix.
+  The one to extract form is you notice the uppercase first letter. (Python-3.13.2.tar.xz)
+</TopTip>
+
+```bash
+tar -xvf Python-3.13.2.tar.xz
+cd Python-3.13.2
+./configure --prefix=/usr   \
+            --enable-shared \
+            --without-ensurepip
+make
+make install
+```
+
+### Texinfo {{ id: 'texinfo' }}
+
+The Textinfo package contains programs for reading, writing and converting info pages.
+
+Unzip the package, enter the directory, configure, compile and install.
+
+```bash
+tar -xvf texinfo-7.2.tar.xz
+cd texinfo-7.2
+./configure --prefix=/usr
+make
+make install
+```
+
+### Util-linux {{ id: 'util-linux' }}
+
+The Util-linux package contains miscellaneous utility programs.
+
+Unzip the package, enter the directory.
+
+```bash
+tar -xvf util-linux-2.40.4.tar.xz 
+cd util-linux-2.40.4
+```
+
+It is recommended using the `/var/lib/hwclock` directory instead of the usual `/etc` directory
+as the location for the `adjtime` file. Create the directory.
+
+```bash
+mkdir -pv /var/lib/hwclock
+```
+
+Configure, compile and install.
+
+```bash
+./configure --libdir=/usr/lib     \
+            --runstatedir=/run    \
+            --disable-chfn-chsh   \
+            --disable-login       \
+            --disable-nologin     \
+            --disable-su          \
+            --disable-setpriv     \
+            --disable-runuser     \
+            --disable-pylibmount  \
+            --disable-static      \
+            --disable-liblastlog2 \
+            --without-python      \
+            ADJTIME_PATH=/var/lib/hwclock/adjtime \
+            --docdir=/usr/share/doc/util-linux-2.40.4
+make
+make install
+```
+
+### Cleaning up {{ id: 'cleaning-up' }}
+
+First, remove the currently installed documentation files.
+
+```bash
+rm -rf /usr/share/{info,man,doc}/*
+```
+
+Now, remove the libtool `.la` files, are only useful for libltdl.
+
+```bash
+find /usr/{lib,libexec} -name \*.la -delete
+```
+
+And the directory `/tools` is no longer needed.
+
+```bash
+rm -rf /tools
+```
+
+### Backup {{ id: 'backup' }}
+
+At this point the current LFS system is in a good state,
+Creating a backup of the current system may prove useful.
+
+The following steps are performed from outside the chroot environment.
+
+Leave the chroot environment.
+
+```bash
+exit
+```
+
+Once outside the chroot environment, make sure you are `root` user and the content of the `LFS` variable
+be `/mnt/lfs`.
+
+```bash
+root@debian:~$ echo $LFS
+/mnt/lfs
+```
+
+Now, unmount the virtual file systems.
+
+```bash
+mountpoint -q $LFS/dev/shm && umount $LFS/dev/shm
+umount $LFS/dev/pts
+umount $LFS/{sys,proc,run,dev}
+```
+
+Before creating the backup, we should delete the folder of each package we install in `/sources` directory.
+
+```bash
+cd $LFS/sources
+rm -rf */
+```
+
+With this we are left with only `.tar` files.
+
+Now, we can create a backup of the current system.
+
+```bash
+cd $LFS
+tar -cJpf $HOME/lfs-temp-tools-12.3.tar.xz .
+```
+
+This take a while to complete, be patient.
+
+<SectionHeading id='building-lfs' number='4'>
+  Building the LFS System
+</SectionHeading>
+
+Once here, we going to enter the chroot environment again, but we must be sure that
+the `/dev` directory, virtual kernel file system is mounted and link `/dev/shm` is created.
+
+```bash
+mount -v --bind /dev $LFS/dev
+mount -vt devpts devpts -o gid=5,mode=0620 $LFS/dev/pts
+mount -vt proc proc $LFS/proc
+mount -vt sysfs sysfs $LFS/sys
+mount -vt tmpfs tmpfs $LFS/run
+
+if [ -h $LFS/dev/shm ]; then
+  install -v -d -m 1777 $LFS$(realpath /dev/shm)
+else
+  mount -vt tmpfs -o nosuid,nodev tmpfs $LFS/dev/shm
+fi
+```
+
+Now, enter the chroot environment.
+
+```bash
+chroot "$LFS" /usr/bin/env -i   \
+    HOME=/root                  \
+    TERM="$TERM"                \
+    PS1='(lfs chroot) \u:\w\$ ' \
+    PATH=/usr/bin:/usr/sbin     \
+    MAKEFLAGS="-j$(nproc)"      \
+    TESTSUITEFLAGS="-j$(nproc)" \
+    /bin/bash --login
+```
+
+Now inside the chroot environment, let's install the packages definitives.
+
+### Man pages in LFS {{ id: 'man-pages-lfs' }}
+
+The Man-pages package contains the manual pages.
+
+Unzip the package.
+
+```bash
+tar -xf man-pages-6.12.tar.xz
+cd man-pages-6.12
+```
+
+Remove two man pages for password hashing functions. Libxcrypt will provide a better version of these man pages: 
+
+```bash
+rm -v man3/crypt*
+```
+
+And install the package.
+
+```bash
+make -R GIT=false prefix=/usr install
+```
+
+
+### Iana-Etc in LFS {{ id: 'iana-etc-lfs' }}
+
+The Iana-Etc package provides data for network services and protocols.
+
+Unzip the package.
+
+```bash
+tar -xvf iana-etc-20250123.tar.gz
+cd iana-etc-20250123
+```
+
+For this package, we only need to copy the files into place:
+
+```bash
+cp services protocols /etc
+```
+
+### Glibc in LFS {{ id: 'glibc-lfs' }}
+
+The Glibc package contains the main C library.
+
+```bash
+tar -xvf glibc-2.41.tar.xz
+cd glibc-2.41
+patch -Np1 -i ../glibc-2.41-fhs-1.patch
+mkdir -v build
+cd       build
+echo "rootsbindir=/usr/sbin" > configparms
+../configure --prefix=/usr                            \
+             --disable-werror                         \
+             --enable-kernel=5.4                      \
+             --enable-stack-protector=strong          \
+             --disable-nscd                           \
+             libc_cv_slibdir=/usr/lib
+make
+```
+
+This is the definitive installation of the Glibc package in our system, so we need check the package is correcly
+compiled.
+
+```bash
+make check
+```
+
+This can take a while to check all the tests, but some may fail.
+
+![Glibc check](/src/app/blog/linux-from-scratch/images/glibc_checks.png)
+
+if you want check which test failed due to timeout run:
+
+```bash
+grep "Time out" $(find -name \*.out)
+```
+
+Glibc will complain about the absence of `/etc/ld.so.conf`, so create that file.
+
+```bash
+touch /etc/ld.so.conf
+```
+
+Fix teh makefile to skip an outdated sanity check that fails:
+
+```bash
+sed '/test-installation/s@$(PERL)@echo not running@' -i ../Makefile
+```
+
+And install the package.
+
+```bash
+make install
+```
+
+And fix a hardcoded path to the executable loader in the `ldd` script:
+
+```bash
+sed '/RTLDLIST=/s@/usr@@g' -i /usr/bin/ldd
+```
+
+Install the locales that can make the system respond in a different language.
+
+```bash
+localedef -i C -f UTF-8 C.UTF-8
+localedef -i cs_CZ -f UTF-8 cs_CZ.UTF-8
+localedef -i de_DE -f ISO-8859-1 de_DE
+localedef -i de_DE@euro -f ISO-8859-15 de_DE@euro
+localedef -i de_DE -f UTF-8 de_DE.UTF-8
+localedef -i el_GR -f ISO-8859-7 el_GR
+localedef -i en_GB -f ISO-8859-1 en_GB
+localedef -i en_GB -f UTF-8 en_GB.UTF-8
+localedef -i en_HK -f ISO-8859-1 en_HK
+localedef -i en_PH -f ISO-8859-1 en_PH
+localedef -i en_US -f ISO-8859-1 en_US
+localedef -i en_US -f UTF-8 en_US.UTF-8
+localedef -i es_ES -f ISO-8859-15 es_ES@euro
+localedef -i es_MX -f ISO-8859-1 es_MX
+localedef -i fa_IR -f UTF-8 fa_IR
+localedef -i fr_FR -f ISO-8859-1 fr_FR
+localedef -i fr_FR@euro -f ISO-8859-15 fr_FR@euro
+localedef -i fr_FR -f UTF-8 fr_FR.UTF-8
+localedef -i is_IS -f ISO-8859-1 is_IS
+localedef -i is_IS -f UTF-8 is_IS.UTF-8
+localedef -i it_IT -f ISO-8859-1 it_IT
+localedef -i it_IT -f ISO-8859-15 it_IT@euro
+localedef -i it_IT -f UTF-8 it_IT.UTF-8
+localedef -i ja_JP -f EUC-JP ja_JP
+localedef -i ja_JP -f SHIFT_JIS ja_JP.SJIS 2> /dev/null || true
+localedef -i ja_JP -f UTF-8 ja_JP.UTF-8
+localedef -i nl_NL@euro -f ISO-8859-15 nl_NL@euro
+localedef -i ru_RU -f KOI8-R ru_RU.KOI8-R
+localedef -i ru_RU -f UTF-8 ru_RU.UTF-8
+localedef -i se_NO -f UTF-8 se_NO.UTF-8
+localedef -i ta_IN -f UTF-8 ta_IN.UTF-8
+localedef -i tr_TR -f UTF-8 tr_TR.UTF-8
+localedef -i zh_CN -f GB18030 zh_CN.GB18030
+localedef -i zh_HK -f BIG5-HKSCS zh_HK.BIG5-HKSCS
+localedef -i zh_TW -f UTF-8 zh_TW.UTF-8
+```
+
+and make the locales available for the system.
+
+```bash
+make localedata/install-locales
+```
+
+Now, there are two locales that will be needed for testing in the near future.
+
+```bash
+localedef -i C -f UTF-8 C.UTF-8
+localedef -i ja_JP -f SHIFT_JIS ja_JP.SJIS 2> /dev/null || true
+```
+
+Now, we going to configure glibc.
+
+Let's create `/etc/nsswitch.conf` file.
+
+```bash
+cat > /etc/nsswitch.conf << "EOF"
+# Begin /etc/nsswitch.conf
+
+passwd: files
+group: files
+shadow: files
+
+hosts: files dns
+networks: files
+
+protocols: files
+services: files
+ethers: files
+rpc: files
+
+# End /etc/nsswitch.conf
+EOF
+```
+
+To add timezone data:
+
+```bash
+tar -xf ../../tzdata2025a.tar.gz
+
+ZONEINFO=/usr/share/zoneinfo
+mkdir -pv $ZONEINFO/{posix,right}
+
+for tz in etcetera southamerica northamerica europe africa antarctica  \
+          asia australasia backward; do
+    zic -L /dev/null   -d $ZONEINFO       ${tz}
+    zic -L /dev/null   -d $ZONEINFO/posix ${tz}
+    zic -L leapseconds -d $ZONEINFO/right ${tz}
+done
+
+cp -v zone.tab zone1970.tab iso3166.tab $ZONEINFO
+zic -d $ZONEINFO -p America/New_York
+unset ZONEINFO tz
+```
+
+Now let's select local timezone.
+
+```bash
+tzselect
+```
+
+![Tzselect](/src/app/blog/linux-from-scratch/images/select_timezone.png)
+
+Select the option for your timezone.
+
+![Select country](/src/app/blog/linux-from-scratch/images/select_country.png)
+
+And your country, after confirm. 
+
+Once confirmed you will pay attention to the timezone you have selected in the output.
+
+```bash
+export TZ='America/Bogota'
+```
+
+And create the `/etc/localtime` file as symlink.
+
+```bash
+ln -sfv /usr/share/zoneinfo/America/Bogota /etc/localtime
+```
+
+Right, now to finish we need configure the **Dynamic Loader**.
+
+Create `/etc/ld.so.conf` file.
+
+```bash
+cat > /etc/ld.so.conf << "EOF"
+# Begin /etc/ld.so.conf
+/usr/local/lib
+/opt/lib
+
+EOF
+```
+
+And for dynamic loader also search a directory and include the contents of file found there.
+
+```bash
+cat >> /etc/ld.so.conf << "EOF"
+# Add an include directory
+include /etc/ld.so.conf.d/*.conf
+
+EOF
+mkdir -pv /etc/ld.so.conf.d
+```
+
+### Zlib in LFS {{ id: 'zlib-lfs' }}
+
+To extract, prepare compilation, make, check and install zlib.
+
+```bash
+tar -xvf zlib-1.3.1.tar.gz
+cd zlib-1.3.1
+./configure --prefix=/usr
+make
+make check
+make install
+```
+
+After that, remove a useless static library.
+
+```bash
+rm -fv /usr/lib/libz.a
+```
+
+### Bzip2 in LFS {{ id: 'bzip2-lfs' }}
+
+Unzip the package.
+
+```bash
+tar -xvf bzip2-1.0.8.tar.gz
+cd bzip2-1.0.8
+```
+
+For bzip2, we need apply a patch to the source code.
+
+```bash
+patch -Np1 -i ../bzip2-1.0.8-install_docs-1.patch
+sed -i 's@\(ln -s -f \)$(PREFIX)/bin/@\1@' Makefile
+sed -i "s@(PREFIX)/man@(PREFIX)/share/man@g" Makefile
+```
+
+Then prepare the compilation.
+
+```bash
+make -f Makefile-libbz2_so
+make clean
+make
+make PREFIX=/usr install
+```
+
+And install shared library and `bzip2` binary.
+
+```bash
+cp -av libbz2.so.* /usr/lib
+ln -sv libbz2.so.1.0.8 /usr/lib/libbz2.so
+cp -v bzip2-shared /usr/bin/bzip2
+for i in /usr/bin/{bzcat,bunzip2}; do
+  ln -sfv bzip2 $i
+done
+```
+
+Finally, remove static libraries.
+
+```bash
+rm -fv /usr/lib/libbz2.a
+```
+
+### Xz in LFS {{ id: 'xz-lfs' }}
+
+Extract the package, configure compilation, make, check and install.
+
+```bash
+tar -xvf xz-5.6.4.tar.xz
+cd xz-5.6.4
+./configure --prefix=/usr    \
+            --disable-static \
+            --docdir=/usr/share/doc/xz-5.6.4
+make
+make check
+make install
+```
+
+### Lz4 in LFS {{ id: 'lz4-lfs' }}
+
+Lz4 is a lossless compression algorithm, providing compression speed greater than 500 MB/s per core.
+
+Extract, compile, check and install.
+
+```bash
+tar -xvf lz4-1.10.0.tar.gz
+cd lz4-1.10.0
+make BUILD_STATIC=no PREFIX=/usr
+make -j1 check
+make BUILD_STATIC=no PREFIX=/usr install
+```
+
+### Zstd in LFS {{ id: 'zstd-lfs' }}
+
+Zstandard is a real-time compression algorithm, providing high compression ratios. 
+
+To extract, compile, check and install.
+
+```bash
+tar -xvf zstd-1.5.7.tar.gz
+cd zstd-1.5.7
+make prefix=/usr
+make check
+make prefix=/usr install
+```
+
+Remove the static library.
+
+```bash
+rm -v /usr/lib/libzstd.a
+```
+
+### File in LFS {{ id: 'file-lfs' }}
+
+Extract, configure, compile, check and install.
+
+```bash
+tar -xvf file-5.46.tar.gz
+cd file-5.46
+./configure --prefix=/usr
+make
+make check
+make install
+```
+
+### Readline in LFS {{ id: 'readline-lfs' }}
+
+The Readline package is a set of libraries that offer command-line editing and history capabilities. 
+
+Extract the package.
+
+```bash
+tar -xvf readline-8.2.13.tar.gz
+cd readline-8.2.13
+```
+
+To prevent errors with the old libraries of readline, we type the
+following sed command.
+
+```bash
+sed -i '/MV.*old/d' Makefile.in
+sed -i '/{OLDSUFF}/c:' support/shlib-install
+sed -i 's/-Wl,-rpath,[^ ]*//' support/shobj-conf
+```
+
+Configure, compile, check and install.
+
+```bash
+./configure --prefix=/usr    \
+            --disable-static \
+            --with-curses    \
+            --docdir=/usr/share/doc/readline-8.2.13
+make SHLIB_LIBS="-lncursesw"
+make install
+```
+
+If you want install the documentation:
+
+```bash
+install -v -m644 doc/*.{ps,pdf,html,dvi} /usr/share/doc/readline-8.2.13
+```
+
+### M4 in LFS {{ id: 'm4-lfs' }}
+
+Extract, configure, compile, check and install.
+
+```bash
+tar -xvf m4-1.4.19.tar.xz
+cd m4-1.4.19
+./configure --prefix=/usr
+make
+make check
+make install
+```
+
+### Bc in LFS {{ id: 'bc-lfs' }}
+
+Extract, configure, compile, check and install.
+
+```bash
+tar -xvf bc-7.0.3.tar.xz
+cd bc-7.0.3
+CC=gcc ./configure --prefix=/usr -G -O3 -r
+make
+make test
+make install
+```
+
+### Flex in LFS {{ id: 'flex-lfs' }}
+
+The Flex package contains a utility for generating programs that recognize patterns
+in text.
+
+Extract, configure, compile, check and install.
+
+```bash
+tar -xvf flex-2.6.4.tar.gz
+cd flex-2.6.4
+./configure --prefix=/usr \
+            --docdir=/usr/share/doc/flex-2.6.4 \
+            --disable-static
+make
+make check 
+make install
+```
+
+Some programs try use lex instead of flex, so we need to create a symlink.
+
+```bash
+ln -sv flex   /usr/bin/lex
+ln -sv flex.1 /usr/share/man/man1/lex.1
+```
+
+### Tcl in LFS {{ id: 'tcl-lfs' }}
+
+The Tcl package contains the Tool Command Language, a robust general-purpose scripting language. 
+
+Extract, configure, compile, check and install.
+
+```bash
+tar -xvf tcl8.6.16-src.tar.gz
+cd tcl8.6.16
+SRCDIR=$(pwd)
+cd unix
+./configure --prefix=/usr           \
+            --mandir=/usr/share/man \
+            --disable-rpath
+make
+sed -e "s|$SRCDIR/unix|/usr/lib|" \
+    -e "s|$SRCDIR|/usr/include|"  \
+    -i tclConfig.sh
+sed -e "s|$SRCDIR/unix/pkgs/tdbc1.1.10|/usr/lib/tdbc1.1.10|" \
+    -e "s|$SRCDIR/pkgs/tdbc1.1.10/generic|/usr/include|"    \
+    -e "s|$SRCDIR/pkgs/tdbc1.1.10/library|/usr/lib/tcl8.6|" \
+    -e "s|$SRCDIR/pkgs/tdbc1.1.10|/usr/include|"            \
+    -i pkgs/tdbc1.1.10/tdbcConfig.sh
+sed -e "s|$SRCDIR/unix/pkgs/itcl4.3.2|/usr/lib/itcl4.3.2|" \
+    -e "s|$SRCDIR/pkgs/itcl4.3.2/generic|/usr/include|"    \
+    -e "s|$SRCDIR/pkgs/itcl4.3.2|/usr/include|"            \
+    -i pkgs/itcl4.3.2/itclConfig.sh
+unset SRCDIR
+make test
+make install
+```
+
+Make the installed library writable.
+
+```bash
+chmod -v u+w /usr/lib/libtcl8.6.so
+```
+
+Install the headers, make necessary symlink and rename man pages.
+
+```bash
+make install-private-headers
+ln -sfv tclsh8.6 /usr/bin/tclsh
+mv /usr/share/man/man3/{Thread,Tcl_Thread}.3
+```
+
+If you want install the documentation:
+
+```bash
+cd ..
+tar -xf ../tcl8.6.16-html.tar.gz --strip-components=1
+mkdir -v -p /usr/share/doc/tcl-8.6.16
+cp -v -r  ./html/* /usr/share/doc/tcl-8.6.16
+```
+
+### Expect in LFS {{ id: 'expect-lfs' }}
+
+The expect package contains tools for automating, via scripted dialogues, interactive applications.
+
+Extract and enter the directory.
+
+```bash
+tar -xvf expect5.45.4.tar.gz
+cd expect5.45.4
+```
+
+Expect needs PTY to work, Verify that.
+
+```bash
+python3 -c 'from pty import spawn; spawn(["echo", "ok"])'
+```
+
+So, let's apply a patch to the source code, prepare compilation, make, check and install.
+
+```bash
+patch -Np1 -i ../expect-5.45.4-gcc14-1.patch
+./configure --prefix=/usr           \
+            --with-tcl=/usr/lib     \
+            --enable-shared         \
+            --disable-rpath         \
+            --mandir=/usr/share/man \
+            --with-tclinclude=/usr/include
+make 
+make test
+make install
+ln -svf expect5.45.4/libexpect5.45.4.so /usr/lib
+```
+
+### DejaGNU in LFS {{ id: 'dejagnu-lfs' }}
+
+The DejaGNU package contains a framework for running test suites on GNU tools.
+
+Extract, prepare compilation, make, check and install.
+
+```bash
+tar -xvf dejagnu-1.6.3.tar.gz
+cd dejagnu-1.6.3
+mkdir -v build
+cd       build
+../configure --prefix=/usr
+makeinfo --html --no-split -o doc/dejagnu.html ../doc/dejagnu.texi
+makeinfo --plaintext       -o doc/dejagnu.txt  ../doc/dejagnu.texi
+make check
+make install
+install -v -dm755  /usr/share/doc/dejagnu-1.6.3
+install -v -m644   doc/dejagnu.{html,txt} /usr/share/doc/dejagnu-1.6.3
+```
+
+### Pkgconf in LFS {{ id: 'pkgconf-lfs' }}
+
+The pkgconf package is a successor to pkg-config and contains a tool for passing the include path and library path to applications.
+
+Extract, configure, compile and install.
+
+```bash
+tar -xvf pkgconf-2.3.0.tar.xz
+cd pkgconf-2.3.0
+./configure --prefix=/usr              \
+            --disable-static           \
+            --docdir=/usr/share/doc/pkgconf-2.3.0
+make 
+make install
+```
+
+For maintain compatibility with the original pkg-config, create two symlinks.
+
+```bash
+ln -sv pkgconf   /usr/bin/pkg-config
+ln -sv pkgconf.1 /usr/share/man/man1/pkg-config.1
+```
+
+### Binutils in LFS {{ id: 'binutils-lfs' }}
+
+Extract, configure, compile, check and install.
+
+```bash
+tar -xvf binutils-2.44.tar.xz
+cd binutils-2.44
+mkdir -v build
+cd       build
+../configure --prefix=/usr       \
+             --sysconfdir=/etc   \
+             --enable-ld=default \
+             --enable-plugins    \
+             --enable-shared     \
+             --disable-werror    \
+             --enable-64-bit-bfd \
+             --enable-new-dtags  \
+             --with-system-zlib  \
+             --enable-default-hash-style=gnu
+make tooldir=/usr
+make -k check
+make tooldir=/usr install
+```
+
+You can list failed tests with:
+
+```bash
+grep '^FAIL:' $(find -name '*.log')
+```
+
+Finally, remove useless static libraries.
+
+```bash
+rm -rfv /usr/lib/lib{bfd,ctf,ctf-nobfd,gprofng,opcodes,sframe}.a \
+        /usr/share/doc/gprofng/
+```
+
+### GMP in LFS {{ id: 'gmp-lfs' }}
+
+The GMP package contains math libraries. These have usefull functions for arbitrary precision arithmetic.
+
+```bash
+tar -xvf gmp-6.3.0.tar.xz
+cd gmp-6.3.0
+```
+
+<TopTip>
+If you are building for 32-bit, but have a processor that supports
+64-bit instructions, add the ABI=32 parameter to the ./configure command.
+```bash
+ABI=32 ./configure ...
+```
+</TopTip>
+
+```bash
+./configure --prefix=/usr    \
+            --enable-cxx     \
+            --disable-static \
+            --docdir=/usr/share/doc/gmp-6.3.0
+``` 
+
+Then, compile, generate html documentation and run tests.
+
+```bash
+make 
+make html
+make check 2>&1 | tee gmp-check-log
+```
+
+You need ensure at least 199 test in the result test suite passed.
+
+```bash
+awk '/# PASS:/{total+=$3} ; END{print total}' gmp-check-log
+```
+
+Install the package.
+
+```bash
+make install
+make install-html
+```
+
+### MPFR in LFS {{ id: 'mpfr-lfs' }}
+
+The MPFR package contains functions for multiple precision math.
+
+```bash
+tar -xvf mpfr-4.2.1.tar.xz
+cd mpfr-4.2.1
+./configure --prefix=/usr        \
+            --disable-static     \
+            --enable-thread-safe \
+            --docdir=/usr/share/doc/mpfr-4.2.1
+make 
+make html
+```
+
+The tests suite are considered critical, so you need to ensure that all tests passed.
+
+```bash
+make check 
+```
+
+Install the package.
+
+```bash
+make install
+make install-html
+```
+
+### MPC in LFS {{ id: 'mpc-lfs' }}
+
+The MPC package contains a library for the arithmetic of complex numbers with arbitrary high precision
+and correct rounding of the result.
+
+Extract, configure, compile, check and install.
+
+```bash
+tar -xvf mpc-1.3.1.tar.gz
+cd mpc-1.3.1
+./configure --prefix=/usr    \
+            --disable-static \
+            --docdir=/usr/share/doc/mpc-1.3.1
+make
+make html
+make check
+make install
+make install-html
+```
+
+### Attr in LFS {{ id: 'attr-lfs' }}
+
+The Attr package contains utilities to administrer the extended attributes of filesystem objects.
+
+Extract, configure, compile, check and install.
+
+```bash
+tar -xvf attr-2.5.2.tar.gz
+cd attr-2.5.2
+./configure --prefix=/usr     \
+            --disable-static  \
+            --sysconfdir=/etc \
+            --docdir=/usr/share/doc/attr-2.5.2
+make
+make check
+make install
+```
+
+### Acl in LFS {{ id: 'acl-lfs' }}
+
+The Acl package contains utilities to administer Access Control Lists, which are used to define fine-grained
+discretionary access rights for files and directories.
+
+Extract, configure, compile, check and install.
+
+```bash
+tar -xvf acl-2.3.2.tar.xz
+cd acl-2.3.2
+./configure --prefix=/usr         \
+            --disable-static      \
+            --docdir=/usr/share/doc/acl-2.3.2
+make
+make check 
+make install
+```
+
+One test named `test/cp.test` is known to fail because Coreutils is not built with the Acl support yet.
+
+### Libcap in LFS {{ id: 'libcap-lfs' }}
+
+The Libcap package implements the userspace interface to the POSIX 10003.1e capabilities
+available in the Linux kernels.
+
+Extract, prevent the static libraries, compile, check and install.
+
+```bash
+tar -xvf libcap-2.73.tar.xz
+cd libcap-2.73
+sed -i '/install -m.*STA/d' libcap/Makefile
+make prefix=/usr lib=lib
+make test
+make prefix=/usr lib=lib install
+```
+
+### Libxcrypt in LFS {{ id: 'libxcrypt-lfs' }}
+
+The libxcrypt package contains a modern library for one-way hashing of passwords.
+
+Extract, configure, compile, check and install.
+
+```bash
+tar -xvf libxcrypt-4.4.38.tar.xz
+cd libxcrypt-4.4.38
+./configure --prefix=/usr                \
+            --enable-hashes=strong,glibc \
+            --enable-obsolete-api=no     \
+            --disable-static             \
+            --disable-failure-tokens
+make
+make check
+make install
+```
+
+### Shadow in LFS {{ id: 'shadow-lfs' }}
+
+The Shadow package contains programs for handling passwords in a secure way.
+
+```bash
+tar -xvf shadow-4.17.3.tar.xz
+cd shadow-4.17.3
+```
+
+Disable the installation of the groups program and its man pages.
+
+```bash
+sed -i 's/groups$(EXEEXT) //' src/Makefile.in
+find man -name Makefile.in -exec sed -i 's/groups\.1 / /'   {} \;
+find man -name Makefile.in -exec sed -i 's/getspnam\.3 / /' {} \;
+find man -name Makefile.in -exec sed -i 's/passwd\.5 / /'   {} \;
+sed -e 's:#ENCRYPT_METHOD DES:ENCRYPT_METHOD YESCRYPT:' \
+    -e 's:/var/spool/mail:/var/mail:'                   \
+    -e '/PATH=/{s@/sbin:@@;s@/bin:@@}'                  \
+    -i etc/login.defs
+```
+
+Configure, compile and install.
+
+```bash
+touch /usr/bin/passwd
+./configure --sysconfdir=/etc   \
+            --disable-static    \
+            --with-{b,yes}crypt \
+            --without-libbsd    \
+            --with-group-name-max-length=32
+make
+make exec_prefix=/usr install
+make -C man install-man
+```
+
+Enable shadowed passwords.
+
+```bash
+pwconv
+grpconv
+```
+
+Change the default parameters of `useradd` shadow's configuration file.
+
+```bash
+mkdir -p /etc/default
+useradd -D --gid 999
+```
+
+And choose a password for user `root`.
+
+```bash
+passwd root
+```
+
+### GCC in LFS {{ id: 'gcc-lfs' }}
