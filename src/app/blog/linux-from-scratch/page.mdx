@@ -193,7 +193,61 @@ export const sections = [
         { id: 'libxcrypt-lfs', title: 'Libxcrypt in LFS' },
         { id: 'shadow-lfs', title: 'Shadow in LFS' },
         { id: 'gcc-lfs', title: 'GCC in LFS' },
+        { id: 'ncurses-lfs', title: 'Ncurses in LFS' },
+        { id: 'sed-lfs', title: 'Sed in LFS' },
+        { id: 'psmisc-lfs', title: 'Psmisc in LFS' },
+        { id: 'gettext-lfs', title: 'Gettext in LFS' },
+        { id: 'bison-lfs', title: 'Bison in LFS' },
+        { id: 'grep-lfs', title: 'Grep in LFS' },
+        { id: 'bash-lfs', title: 'Bash in LFS' },
+        { id: 'libtool-lfs', title: 'Libtool in LFS' },
+        { id: 'gdbm-lfs', title: 'GDBM in LFS' },
+        { id: 'gperf-lfs', title: 'Gperf in LFS' },
+        { id: 'expat-lfs', title: 'Expat in LFS' },
+        { id: 'inetutils-lfs', title: 'Inetutils in LFS' },
+        { id: 'less-lfs', title: 'Less in LFS' },
+        { id: 'perl-lfs', title: 'Perl in LFS' },
+        { id: 'xml-parser-lfs', title: 'XML::Parser in LFS' },
+        { id: 'intltool-lfs', title: 'Intltool in LFS' },
+        { id: 'autoconf-lfs', title: 'Autoconf in LFS' },
+        { id: 'automake-lfs', title: 'Automake in LFS' },
+        { id: 'openssl-lfs', title: 'OpenSSL in LFS' },
+        { id: 'libelf-lfs', title: 'Libelf in LFS' },
+        { id: 'libffi-lfs', title: 'Libffi in LFS' },
+        { id: 'python-lfs', title: 'Python in LFS' },
+        { id: 'flit-core-lfs', title: 'Flit-core in LFS' },
+        { id: 'wheel-lfs', title: 'Wheel in LFS' },
+        { id: 'setuptools-lfs', title: 'Setuptools in LFS' },
+        { id: 'ninja-lfs', title: 'Ninja in LFS' },
+        { id: 'meson-lfs', title: 'Meson in LFS' },
+        { id: 'kmod-lfs', title: 'Kmod in LFS' },
+        { id: 'coreutils-lfs', title: 'Coreutils in LFS' },
+        { id: 'check-lfs', title: 'Check in LFS' },
+        { id: 'diffutils-lfs', title: 'Diffutils in LFS' },
+        { id: 'gawk-lfs', title: 'Gawk in LFS' },
+        { id: 'findutils-lfs', title: 'Findutils in LFS' },
+        { id: 'groff-lfs', title: 'Groff in LFS' },
+        { id: 'grub-lfs', title: 'GRUB in LFS' },
+        { id: 'gzip-lfs', title: 'Gzip in LFS' },
+        { id: 'iproute2-lfs', title: 'Iproute2 in LFS' },
+        { id: 'kbd-lfs', title: 'Kbd in LFS' },
+        { id: 'libpipeline-lfs', title: 'Libpipeline in LFS' },
+        { id: 'make-lfs', title: 'Make in LFS' },
+        { id: 'patch-lfs', title: 'Patch in LFS' },
+        { id: 'tar-lfs', title: 'Tar in LFS' },
+        { id: 'textinfo-lfs', title: 'Textinfo in LFS' },
+        { id: 'vim-lfs', title: 'Vim in LFS' },
+        { id: 'markupsafe-lfs', title: 'Markupsafe in LFS' },
+        { id: 'jinja2-lfs', title: 'Jinja2 in LFS' },
+        { id: 'udev-lfs', title: 'Udev from Systemd in LFS' },
+        { id: 'man-db-lfs', title: 'Man-DB in LFS' },
+        { id: 'procps-ng-lfs', title: 'Procps-ng in LFS' },
+        { id: 'util-linux-lfs', title: 'Util-linux in LFS' },
+        { id: 'e2fsprogs-lfs', title: 'E2fsprogs in LFS' },
+        { id: 'sysklogd-lfs', title: 'Sysklogd in LFS' },
+        { id: 'sysvinit-lfs', title: 'Sysvinit in LFS' },
       ] },
+      { id: 'stripping-and-cleanup', title: 'Stripping and Cleaning Up' },
     ],
   },
 ]
@@ -2211,6 +2265,9 @@ chroot "$LFS" /usr/bin/env -i   \
 
 Now inside the chroot environment, let's install the packages definitives.
 
+For some packages I not add description, because 
+I added he description in the previous chapters.
+
 ### Man pages in LFS {{ id: 'man-pages-lfs' }}
 
 The Man-pages package contains the manual pages.
@@ -3063,3 +3120,1254 @@ passwd root
 ```
 
 ### GCC in LFS {{ id: 'gcc-lfs' }}
+
+Extract the source code.
+
+```bash
+tar -xvf gcc-14.2.0.tar.xz
+cd gcc-14.2.0
+```
+
+Change the default directory name for 64-bit libraries.
+
+```bash
+case $(uname -m) in
+  x86_64)
+    sed -e '/m64=/s/lib64/lib/' \
+        -i.orig gcc/config/i386/t-linux64
+  ;;
+esac
+```
+
+Now, prepare the build and compile.
+
+```bash
+mkdir -v build
+cd       build
+../configure --prefix=/usr            \
+             LD=ld                    \
+             --enable-languages=c,c++ \
+             --enable-default-pie     \
+             --enable-default-ssp     \
+             --enable-host-pie        \
+             --disable-multilib       \
+             --disable-bootstrap      \
+             --disable-fixincludes    \
+             --with-system-zlib
+make
+```
+
+Set a stack size hard limit to infinite and remove several known test failures.
+
+```bash
+ulimit -s -H unlimited
+sed -e '/cpython/d'               -i ../gcc/testsuite/gcc.dg/plugin/plugin.exp
+sed -e 's/no-pic /&-no-pie /'     -i ../gcc/testsuite/gcc.target/i386/pr113689-1.c
+sed -e 's/300000/(1|300000)/'     -i ../libgomp/testsuite/libgomp.c-c++-common/pr109062.c
+sed -e 's/{ target nonpic } //' \
+    -e '/GOTPCREL/d'              -i ../gcc/testsuite/gcc.target/i386/fentryname3.c
+```
+
+change the to testter user and run.
+
+```bash
+chown -R tester .
+su tester -c "PATH=$PATH make -k check"
+```
+
+Test can take a while to complete, be patient.
+
+Install the package.
+
+```bash
+make install
+```
+
+Change the ownership to the root user and group.
+
+```bash
+chown -v -R root:root \
+    /usr/lib/gcc/$(gcc -dumpmachine)/14.2.0/include{,-fixed}
+```
+
+Now, we need create this symlinks.
+
+```bash
+ln -svr /usr/bin/cpp /usr/lib
+ln -sv gcc.1 /usr/share/man/man1/cc.1
+ln -sfv ../../libexec/gcc/$(gcc -dumpmachine)/14.2.0/liblto_plugin.so \
+        /usr/lib/bfd-plugins/
+```
+
+And finally, to check if all is working, run:
+
+```bash
+echo 'int main(){}' > dummy.c
+cc dummy.c -v -Wl,--verbose &> dummy.log
+readelf -l a.out | grep ': /lib'
+grep -E -o '/usr/lib.*/S?crt[1in].*succeeded' dummy.log
+grep -B4 '^ /usr/include' dummy.log
+grep 'SEARCH.*/usr/lib' dummy.log |sed 's|; |\n|g'
+grep "/lib.*/libc.so.6 " dummy.log
+grep found dummy.log
+```
+
+And the output should be something like this:
+
+![Check GCC](/src/app/blog/linux-from-scratch/images/check_gcc.png)
+
+Once everything is working, we can remove the test files and move 
+misplaced file.
+
+```bash
+rm -v dummy.c a.out dummy.log
+mkdir -pv /usr/share/gdb/auto-load/usr/lib
+mv -v /usr/lib/*gdb.py /usr/share/gdb/auto-load/usr/lib
+```
+
+### Ncurses in LFS {{ id: 'ncurses-lfs' }}
+
+Extract, configure and compile.
+
+```bash
+tar -xvf ncurses-6.5.tar.gz
+cd ncurses-6.5
+./configure --prefix=/usr           \
+            --mandir=/usr/share/man \
+            --with-shared           \
+            --without-debug         \
+            --without-normal        \
+            --with-cxx-shared       \
+            --enable-pc-files       \
+            --with-pkg-config-libdir=/usr/lib/pkgconfig
+make
+```
+
+Install the package.
+
+```bash
+make DESTDIR=$PWD/dest install
+install -vm755 dest/usr/lib/libncursesw.so.6.5 /usr/lib
+rm -v  dest/usr/lib/libncursesw.so.6.5
+sed -e 's/^#if.*XOPEN.*$/#if 1/' \
+    -i dest/usr/include/curses.h
+cp -av dest/* /
+for lib in ncurses form panel menu ; do
+    ln -sfv lib${lib}w.so /usr/lib/lib${lib}.so
+    ln -sfv ${lib}w.pc    /usr/lib/pkgconfig/${lib}.pc
+done
+ln -sfv libncursesw.so /usr/lib/libcurses.so
+```
+
+And install Ncurses documentation.
+
+```bash
+cp -v -R doc -T /usr/share/doc/ncurses-6.5
+```
+
+### Sed in LFS {{ id: 'sed-lfs' }}
+
+The Sed package contains a stream editor.
+
+Extract, configure, compile, check and install.
+
+```bash
+tar -xvf sed-4.9.tar.xz
+cd sed-4.9
+./configure --prefix=/usr
+make
+make html
+chown -R tester .
+su tester -c "PATH=$PATH make check"
+make install
+install -d -m755           /usr/share/doc/sed-4.9
+install -m644 doc/sed.html /usr/share/doc/sed-4.9
+```
+
+### Psmisc in LFS {{ id: 'psmisc-lfs' }}
+
+The Psmisc package contains programs for displaying information about running processes.
+
+Extract, configure, compile, check and install.
+
+```bash
+tar -xvf psmisc-23.7.tar.xz
+cd psmisc-23.7
+./configure --prefix=/usr
+make
+make check
+make install
+```
+
+### Gettext in LFS {{ id: 'gettext-lfs' }}
+
+Extract, configure, compile, check and install.
+
+```Bash
+tar -xvf gettext-0.24.tar.xz
+cd gettext-0.24
+./configure --prefix=/usr    \
+            --disable-static \
+            --docdir=/usr/share/doc/gettext-0.24
+make
+make check
+make install
+chmod -v 0755 /usr/lib/preloadable_libintl.so
+```
+
+### Bison in LFS {{ id: 'bison-lfs' }}
+
+Extract, configure, compile, check and install.
+
+```bash
+tar -xvf bison-3.8.2.tar.xz
+cd bison-3.8.2
+./configure --prefix=/usr --docdir=/usr/share/doc/bison-3.8.2
+make  
+make check
+make install
+```
+
+### Grep in LFS {{ id: 'grep-lfs' }}
+
+Extract the package.
+
+```bash
+tar -xvf grep-3.11.tar.xz
+cd grep-3.11
+```
+
+Some tests may fail if you not remove a warning about egrep and fgrep.
+
+```bash
+sed -i "s/echo/#echo/" src/egrep.sh
+```
+
+Configure, compile, check and install.
+
+```bash
+./configure --prefix=/usr
+make 
+make check
+make install
+```
+
+### Bash in LFS {{ id: 'bash-lfs' }}
+
+Extract, configure, compile, check and install.
+
+```bash
+tar -xvf bash-5.2.37.tar.gz
+cd bash-5.2.37
+./configure --prefix=/usr             \
+            --without-bash-malloc     \
+            --with-installed-readline \
+            --docdir=/usr/share/doc/bash-5.2.37
+make
+```
+
+The test suite we should run as a non-root user.
+
+```bash
+chown -R tester .
+su -s /usr/bin/expect tester << "EOF"
+set timeout -1
+spawn make tests
+expect eof
+lassign [wait] _ _ _ value
+exit $value
+EOF
+```
+
+Install the package and run the newly compiled bash program.
+
+```bash
+make install
+exec /usr/bin/bash --login
+```
+
+### Libtool in LFS {{ id: 'libtool-lfs' }}
+
+The Libtool package contains the GNU generic library support script. 
+
+Extract, configure, compile, check, install and remove the static library.
+
+```bash
+tar -xvf libtool-2.5.4.tar.xz
+cd libtool-2.5.4
+./configure --prefix=/usr
+make 
+make check
+make install
+rm -fv /usr/lib/libltdl.a
+```
+
+### GDBM in LFS {{ id: 'gdbm-lfs' }}
+
+The GDBM package contains the GNU Database Manager.
+
+Extract, configure, compile, check and install.
+
+```bash
+tar -xvf gdbm-1.24.tar.gz
+cd gdbm-1.24
+./configure --prefix=/usr    \
+            --disable-static \
+            --enable-libgdbm-compat
+make
+make check
+make install
+```
+
+### Gperf in LFS {{ id: 'gperf-lfs' }}
+
+Gperf is a perfect hash function from a key set.
+
+Extract, configure, compile, check and install.
+
+```bash
+tar -xvf gperf-3.1.tar.gz
+cd gperf-3.1
+./configure --prefix=/usr --docdir=/usr/share/doc/gperf-3.1
+make
+make -j1 check
+make install
+```
+
+### Expat in LFS {{ id: 'expat-lfs' }}
+
+The Expat package contains a stream oriented XML parser in C.
+
+Extract, configure, compile, check and install.
+
+```bash
+tar -xvf expat-2.6.4.tar.xz
+cd expat-2.6.4
+./configure --prefix=/usr    \
+            --disable-static \
+            --docdir=/usr/share/doc/expat-2.6.4
+make 
+make check 
+make install
+```
+
+If you want install the documentation, run:
+
+```bash
+install -v -m644 doc/*.{html,css} /usr/share/doc/expat-2.6.4
+```
+
+### Inetutils in LFS {{ id: 'inetutils-lfs' }}
+
+the Inetutils package contains programs for basic networking.
+
+Extract the source code.
+
+```bash
+tar -xvf inetutils-2.6.tar.xz
+cd inetutils-2.6
+```
+
+Ensure the package build with gcc-14.1 or later.
+
+```bash
+sed -i 's/def HAVE_TERMCAP_TGETENT/ 1/' telnet/telnet.c
+```
+
+Configure, compile, check, install and move to proper location.
+
+```bash
+./configure --prefix=/usr        \
+            --bindir=/usr/bin    \
+            --localstatedir=/var \
+            --disable-logger     \
+            --disable-whois      \
+            --disable-rcp        \
+            --disable-rexec      \
+            --disable-rlogin     \
+            --disable-rsh        \
+            --disable-servers
+make 
+make check 
+make install
+mv -v /usr/{,s}bin/ifconfig
+```
+
+### Less in LFS {{ id: 'less-lfs' }}
+
+The Less package contains a text file viewer.
+
+Extract, configure, compile, check and install.
+
+```bash
+tar -xvf less-668.tar.gz
+cd less-668
+./configure --prefix=/usr --sysconfdir=/etc
+make
+make check
+make install
+```
+
+### Perl in LFS {{ id: 'perl-lfs' }}
+
+Extract the source code.
+
+```bash
+tar -xvf perl-5.40.1.tar.xz
+cd perl-5.40.1
+```
+
+First we need to say perl to use the compress libraries installed on the system.
+
+```bash
+export BUILD_ZLIB=False
+export BUILD_BZIP2=0
+```
+
+Configure, compile, check and install.
+
+```bash
+sh Configure -des                                          \
+             -D prefix=/usr                                \
+             -D vendorprefix=/usr                          \
+             -D privlib=/usr/lib/perl5/5.40/core_perl      \
+             -D archlib=/usr/lib/perl5/5.40/core_perl      \
+             -D sitelib=/usr/lib/perl5/5.40/site_perl      \
+             -D sitearch=/usr/lib/perl5/5.40/site_perl     \
+             -D vendorlib=/usr/lib/perl5/5.40/vendor_perl  \
+             -D vendorarch=/usr/lib/perl5/5.40/vendor_perl \
+             -D man1dir=/usr/share/man/man1                \
+             -D man3dir=/usr/share/man/man3                \
+             -D pager="/usr/bin/less -isR"                 \
+             -D useshrplib                                 \
+             -D usethreads
+make
+TEST_JOBS=$(nproc) make test_harness
+make install
+unset BUILD_ZLIB BUILD_BZIP2
+```
+
+### XML::Parser in LFS {{ id: 'xml-parser-lfs' }}
+
+This module is a Perl interface to James Clark's XML parser, expat.
+
+Extract, configure, compile, check and install.
+
+```bash
+tar -xvf XML-Parser-2.47.tar.gz
+cd XML-Parser-2.47
+perl Makefile.PL
+make
+make test
+make install
+```
+
+### Intltool in LFS {{ id: 'intltool-lfs' }}
+
+The Intltool is an internalization tool used for extracting translatable
+strings from source files.
+
+Extract the source code, fix the warnings caused by perl-5.22, configure, check and install
+
+```bash
+tar -xvf intltool-0.51.0.tar.gz
+cd intltool-0.51.0
+sed -i 's:\\\${:\\\$\\{:' intltool-update.in
+./configure --prefix=/usr
+make
+make check
+make install
+```
+
+### Autoconf in LFS {{ id: 'autoconf-lfs' }}
+
+Extract, configure, compile, check and install.
+
+```bash
+tar -xvf autoconf-2.72.tar.xz
+cd autoconf-2.72
+./configure --prefix=/usr
+make
+make check
+make install
+```
+
+### Automake in LFS {{ id: 'automake-lfs' }}
+
+The automake package contains programs for generating makefiles for use with Autoconf.
+
+Extract, configure, compile, check and install.
+
+```bash
+tar -xvf automake-1.17.tar.xz
+cd automake-1.17
+./configure --prefix=/usr --docdir=/usr/share/doc/automake-1.17
+make 
+make -j$(($(nproc)>4?$(nproc):4)) check
+make install
+```
+
+
+### OpenSSL in LFS {{ id: 'openssl-lfs' }}
+
+The OpenSSL package contains management tools and libraries relating to cryptography.
+
+Extract, configure, compile, check and install.
+
+```bash
+tar -xvf openssl-3.4.1.tar.gz
+cd openssl-3.4.1
+./config --prefix=/usr         \
+         --openssldir=/etc/ssl \
+         --libdir=lib          \
+         shared                \
+         zlib-dynamic
+make
+HARNESS_JOBS=$(nproc) make test
+sed -i '/INSTALL_LIBS/s/libcrypto.a libssl.a//' Makefile
+make MANSUFFIX=ssl install
+mv -v /usr/share/doc/openssl /usr/share/doc/openssl-3.4.1
+```
+
+If you want install the documentation, run:
+
+```bash
+cp -vfr doc/* /usr/share/doc/openssl-3.4.1
+```
+
+### Libelf in LFS {{ id: 'libelf-lfs' }}
+
+Libelf is a library for handling of handling ELF( Executable and Linkable Format) files.
+
+Extract, configure, compile, check and install.
+
+```bash
+tar -xvf elfutils-0.192.tar.bz2
+cd elfutils-0.192
+./configure --prefix=/usr                \
+            --disable-debuginfod         \
+            --enable-libdebuginfod=dummy
+make
+make check
+make -C libelf install
+install -vm644 config/libelf.pc /usr/lib/pkgconfig
+rm /usr/lib/libelf.a
+```
+
+### Libffi in LFS {{ id: 'libffi-lfs' }}
+
+The Libffi library provides a portable, high level programming interface
+to various calling conventions. This allows a programmer to call any function specified
+by a call interface description at run time.
+
+Extract, configure, compile, check and install.
+
+```bash
+tar -xvf libffi-3.4.7.tar.gz
+cd libffi-3.4.7
+./configure --prefix=/usr          \
+            --disable-static       \
+            --with-gcc-arch=native.4.7
+make
+make check
+make install
+```
+
+### Python in LFS {{ id: 'python-lfs' }}
+
+Extract, configure, compile, check and install.
+
+```bash
+tar -xvf Python-3.13.2.tar.xz
+cd Python-3.13.2
+./configure --prefix=/usr       \
+            --enable-shared     \
+            --with-system-expat \
+            --with-ensurepip=yes
+make 
+make test TESTOPTS="--timeout 120"
+make install
+```
+
+For supress warning related to the new version of `pip3`, run:
+
+```bash
+cat > /etc/pip.conf << EOF
+[global]
+root-user-action = ignore
+disable-pip-version-check = true
+EOF
+```
+
+And if you want install the documentation, run:
+
+```bash
+install -v -dm755 /usr/share/doc/python-3.13.2/html
+tar --strip-components=1  \
+    --no-same-owner       \
+    --no-same-permissions \
+    -C /usr/share/doc/python-3.13.2/html \
+    -xvf ../python-3.13.2-docs-html.tar.bz2
+```
+
+### Flit-Core in LFS {{ id: 'flit-core-lfs' }}
+
+Flit-core is the distribution-building parts of Flit( a packaging tool for simple Python modules).
+
+Extract, build and install.
+
+```bash
+tar -xvf flit_core-3.11.0.tar.gz
+cd flit_core-3.11.0
+pip3 wheel -w dist --no-cache-dir --no-build-isolation --no-deps $PWD
+pip3 install --no-index --find-links dist flit_core
+```
+
+### Wheel in LFS {{ id: 'wheel-lfs' }}
+
+Wheel is a Python library that is the reference implementation of the
+Python wheel packaging standard.
+
+Extract, build and install.
+
+```bash
+tar -xvf wheel-0.45.1.tar.gz
+cd wheel-0.45.1
+pip3 wheel -w dist --no-cache-dir --no-build-isolation --no-deps $PWD
+pip3 install --no-index --find-links dist wheel
+```
+
+### Setuptools in LFS {{ id: 'setuptools-lfs' }}
+
+Setuptools is a tool used to download build, install, upgrade and 
+uninstall Python packages.
+
+Extract, build and install.
+
+```bash
+tar -xvf setuptools-75.8.1.tar.gz
+cd setuptools-75.8.1
+pip3 wheel -w dist --no-cache-dir --no-build-isolation --no-deps $PWD
+pip3 install --no-index --find-links dist setuptools
+```
+
+### Ninja in LFS {{ id: 'ninja-lfs' }}
+
+Ninja is a  small build system with a focus on speed.
+
+Extract, configure and install.
+
+```bash
+tar -xvf ninja-1.12.1.tar.gz
+cd ninja-1.12.1
+export NINJAJOBS=4
+sed -i '/int Guess/a \
+  int   j = 0;\
+  char* jobs = getenv( "NINJAJOBS" );\
+  if ( jobs != NULL ) j = atoi( jobs );\
+  if ( j > 0 ) return j;\
+' src/ninja.cc
+python3 configure.py --bootstrap --verbose
+install -vm755 ninja /usr/bin/
+install -vDm644 misc/bash-completion /usr/share/bash-completion/completions/ninja
+install -vDm644 misc/zsh-completion  /usr/share/zsh/site-functions/_ninja
+```
+
+### Meson in LFS {{ id: 'meson-lfs' }}
+
+Meson is an open source build system meant to be both extremely fast, and
+extremely user-friendly.
+
+Extract, compile and install.
+
+```bash
+tar -xvf meson-1.7.0.tar.gz
+cd meson-1.7.0
+pip3 wheel -w dist --no-cache-dir --no-build-isolation --no-deps $PWD
+pip3 install --no-index --find-links dist meson
+install -vDm644 data/shell-completions/bash/meson /usr/share/bash-completion/completions/meson
+install -vDm644 data/shell-completions/zsh/_meson /usr/share/zsh/site-functions/_meson
+```
+
+### Kmod in LFS {{ id: 'kmod-lfs' }}
+
+The Kmod package contains libraries and utilities for loading kernel modules.
+
+Extract, configure, compile and install.
+
+```bash
+tar -xvf kmod-34.tar.xz
+cd kmod-34
+mkdir -p build
+cd       build
+meson setup --prefix=/usr ..    \
+            --sbindir=/usr/sbin \
+            --buildtype=release \
+            -D manpages=false
+ninja
+ninja install
+```
+
+### Coreutils in LFS {{ id: 'coreutils-lfs' }}
+
+Extract, apply a patch, configure, compile, check and install.
+
+```bash
+tar -xvf coreutils-9.6.tar.xz
+cd coreutils-9.6
+patch -Np1 -i ../coreutils-9.6-i18n-1.patch
+autoreconf -fv
+automake -af
+FORCE_UNSAFE_CONFIGURE=1 ./configure \
+            --prefix=/usr            \
+            --enable-no-install-program=kill,uptime
+make 
+make NON_ROOT_USERNAME=tester check-root
+groupadd -g 102 dummy -U tester
+chown -R tester . 
+su tester -c "PATH=$PATH make -k RUN_EXPENSIVE_TESTS=yes check" \
+   < /dev/null
+groupdel dummy
+make install
+mv -v /usr/bin/chroot /usr/sbin
+mv -v /usr/share/man/man1/chroot.1 /usr/share/man/man8/chroot.8
+sed -i 's/"1"/"8"/' /usr/share/man/man8/chroot.8
+```
+
+### Check in LFS {{ id: 'check-lfs' }}
+
+Check is a unit testing framework for C.
+
+Extract, configure, compile, check and install.
+
+```bash
+tar -xvf check-0.15.2.tar.gz
+cd check-0.15.2
+./configure --prefix=/usr --disable-static
+make
+make check
+make docdir=/usr/share/doc/check-0.15.2 install
+```
+
+### Diffutils in LFS {{ id: 'diffutils-lfs' }}
+
+Extract, configure, compile, check and install.
+
+```bash
+tar -xvf diffutils-3.11.tar.xz
+cd diffutils-3.11
+./configure --prefix=/usr
+make
+make check
+make install
+```
+
+### Gawk in LFS {{ id: 'gawk-lfs' }}
+
+The Gawk package contains programs for manipulating text files.
+
+Extract, configure, compile, check and install.
+
+```bash
+tar -xvf gawk-5.3.1.tar.xz
+cd gawk-5.3.1
+sed -i 's/extras//' Makefile.in
+./configure --prefix=/usr
+make
+chown -R tester .
+su tester -c "PATH=$PATH make check"
+rm -f /usr/bin/gawk-5.3.1
+make install
+```
+
+### Findutils in LFS {{ id: 'findutils-lfs' }}
+
+Extract, configure, compile, check and install.
+
+```bash
+tar -xvf findutils-4.10.0.tar.xz
+cd findutils-4.10.0
+./configure --prefix=/usr --localstatedir=/var/lib/locate
+make
+chown -R tester .
+su tester -c "PATH=$PATH make check"
+make install
+```
+
+### Groff in LFS {{ id: 'groff-lfs' }}
+
+The Groff package contains programs for processing and formatting text and images.
+
+Extract, configure, compile, check and install.
+
+```bash
+tar -xvf groff-1.23.0.tar.gz
+cd groff-1.23.0
+PAGE=A4 ./configure --prefix=/usr
+make
+make check
+make install
+```
+
+### GRUB in LFS {{ id: 'grub-lfs' }}
+
+The GRUB package provides Grand Unified Bootloader. In this page it
+will be built with UEFI suppert, which is not enabled for GRUP build in LFS.
+
+Extract the package, configure, compile and install.
+
+```bash
+tar -xvf grub-2.12.tar.xz
+cd grub-2.12
+unset {C,CPP,CXX,LD}FLAGS
+./configure --prefix=/usr        \
+            --sysconfdir=/etc    \
+            --disable-efiemu     \
+            --with-platform=efi  \
+            --target=x86_64      \
+            --disable-werror     &&
+make
+make install &&
+mv -v /etc/bash_completion.d/grub /usr/share/bash-completion/completions
+```
+
+### Gzip in LFS {{ id: 'gzip-lfs' }}
+
+Extract, configure, compile, check and install.
+
+```bash
+tar -xvf gzip-1.13.tar.xz
+cd gzip-1.13
+./configure --prefix=/usr
+make
+make check
+make install
+```
+
+### Iproute2 in LFS {{ id: 'iproute2-lfs' }}
+
+The IPRoute2 package conatins programs for basic and advanced IPV4-based networking.
+
+Extract, configure, compile and install.
+
+```bash
+tar -xvf iproute2-6.13.0.tar.xz
+cd iproute2-6.13.0
+sed -i /ARPD/d Makefile
+rm -fv man/man8/arpd.8
+make NETNS_RUN_DIR=/run/netns
+make SBINDIR=/usr/sbin install
+```
+
+Install the documentation.
+
+```bash
+install -vDm644 COPYING README* -t /usr/share/doc/iproute2-6.13.0
+```
+
+### Kbd in LFS {{ id: 'kbd-lfs' }}
+
+The Kdb package contains key-table files, console fonts,   and keyboard utilities.
+
+Extract, apply a patch, configure, compile and install.
+
+```bash
+tar -xvf kbd-2.7.1.tar.xz
+cd kbd-2.7.1
+patch -Np1 -i ../kbd-2.7.1-backspace-1.patch
+sed -i '/RESIZECONS_PROGS=/s/yes/no/' configure
+sed -i 's/resizecons.8 //' docs/man/man8/Makefile.in
+./configure --prefix=/usr --disable-vlock
+make
+make check
+make install
+```
+
+### Libpipeline in LFS {{ id: 'libpipeline-lfs' }}
+
+The Libpipeline package contains a library for manipulating pipelines of subprocesses in a flexible
+and convenient way.
+
+Extract, configure, compile and install.
+
+```bash
+tar -xvf libpipeline-1.5.8.tar.gz
+cd libpipeline-1.5.8
+./configure --prefix=/usr
+make
+make check
+make install
+```
+
+### Make in LFS {{ id: 'make-lfs' }}
+
+The Make package contains a program for controlling the generation of executables and other non-source
+files of a package from source files.
+
+Extract, configure, compile and install.
+
+```bash
+tar -xvf make-4.4.1.tar.gz
+cd make-4.4.1
+./configure --prefix=/usr
+make
+chown -R tester .
+su tester -c "PATH=$PATH make check"
+make install
+```
+
+### Patch in LFS {{ id: 'patch-lfs' }}
+
+The Patch package contains a program for modifying or creating files.
+
+Extract, configure, compile and install.
+
+```bash
+tar -xvf patch-2.7.6.tar.xz
+cd patch-2.7.6
+./configure --prefix=/usr
+make
+make check
+make install
+```
+
+### Tar in LFS {{ id: 'tar-lfs' }}
+
+The Tar package provides a program for manipulating tar archives.
+
+Extract, configure, compile, check and install.
+
+```bash
+tar -xvf tar-1.35.tar.xz
+cd tar-1.35
+FORCE_UNSAFE_CONFIGURE=1  \
+./configure --prefix=/usr
+make
+make check
+make install
+make -C doc install-html docdir=/usr/share/doc/tar-1.35
+```
+
+### Textinfo in LFS {{ id: 'textinfo-lfs' }}
+
+Extract, configure, compile and install.
+
+```bash
+tar -xvf texinfo-7.2.tar.xz
+cd texinfo-7.2
+./configure --prefix=/usr
+make
+make install
+make TEXMF=/usr/share/texmf install-tex
+```
+
+### Vim in LFS {{ id: 'vim-lfs' }}
+
+The Vim package contains a powerful text editor.
+
+Extract, configure, compile and install.
+
+```bash
+tar -xvf vim-9.1.1166.tar.gz
+cd vim-9.1.1166
+echo '#define SYS_VIMRC_FILE "/etc/vimrc"' >> src/feature.h
+./configure --prefix=/usr
+make
+chown -R tester .
+sed '/test_plugin_glvs/d' -i src/testdir/Make_all.mak
+su tester -c "TERM=xterm-256color LANG=en_US.UTF-8 make -j1 test" \
+   &> vim-test.log
+make install
+```
+
+Create this symbolic links.
+
+```bash
+ln -sv vim /usr/bin/vi
+for L in  /usr/share/man/{,*/}man1/vim.1; do
+    ln -sv vim.1 $(dirname $L)/vi.1
+done
+ln -sv ../vim/vim91/doc /usr/share/doc/vim-9.1.1166
+```
+
+### Markupsafe in LFS {{ id: 'markupsafe-lfs' }}
+
+Markupsafe is a library for parsing and compiling XML, HTML and XHTML.
+
+Extract, compile and install.
+
+```bash
+tar -xvf markupsafe-3.0.2.tar.gz
+cd markupsafe-3.0.2
+pip3 wheel -w dist --no-cache-dir --no-build-isolation --no-deps $PWD
+pip3 install --no-index --find-links dist Markupsafe
+```   
+
+### Jinja2 in LFS {{ id: 'jinja2-lfs' }}
+
+Jinja2 is a Python module that implements a simple pythonic template lenguage.
+
+Extract, compile and install.
+
+```bash
+tar -xvf jinja2-3.1.5.tar.gz
+cd jinja2-3.1.5
+pip3 wheel -w dist --no-cache-dir --no-build-isolation --no-deps $PWD
+pip3 install --no-index --find-links dist Jinja2
+```   
+
+### Udev from Systemd in LFS {{ id: 'udev-lfs' }}
+
+The Udev package contains programs for dynamic creation of device nodes.
+
+```bash
+tar -xvf systemd-257.3.tar.gz
+cd systemd-257.3
+```
+
+Before building, remove some things.
+
+```bash
+sed -e 's/GROUP="render"/GROUP="video"/' \
+    -e 's/GROUP="sgx", //'               \
+    -i rules.d/50-udev-default.rules.in
+sed -i '/systemd-sysctl/s/^/#/' rules.d/99-systemd.rules.in
+sed -e '/NETWORK_DIRS/s/systemd/udev/' \
+    -i src/libsystemd/sd-network/network-util.h
+```
+
+Configure, compile and install.
+
+```bash
+mkdir -p build
+cd       build
+meson setup ..                  \
+      --prefix=/usr             \
+      --buildtype=release       \
+      -D mode=release           \
+      -D dev-kvm-mode=0660      \
+      -D link-udev-shared=false \
+      -D logind=false           \
+      -D vconsole=false
+export udev_helpers=$(grep "'name' :" ../src/udev/meson.build | \
+                      awk '{print $3}' | tr -d ",'" | grep -v 'udevadm')
+ninja udevadm systemd-hwdb                                           \
+      $(ninja -n | grep -Eo '(src/(lib)?udev|rules.d|hwdb.d)/[^ ]*') \
+      $(realpath libudev.so --relative-to .)                         \
+      $udev_helpers
+```
+
+And install the package.
+
+```bash
+install -vm755 -d {/usr/lib,/etc}/udev/{hwdb.d,rules.d,network}
+install -vm755 -d /usr/{lib,share}/pkgconfig
+install -vm755 udevadm                             /usr/bin/
+install -vm755 systemd-hwdb                        /usr/bin/udev-hwdb
+ln      -svfn  ../bin/udevadm                      /usr/sbin/udevd
+cp      -av    libudev.so{,*[0-9]}                 /usr/lib/
+install -vm644 ../src/libudev/libudev.h            /usr/include/
+install -vm644 src/libudev/*.pc                    /usr/lib/pkgconfig/
+install -vm644 src/udev/*.pc                       /usr/share/pkgconfig/
+install -vm644 ../src/udev/udev.conf               /etc/udev/
+install -vm644 rules.d/* ../rules.d/README         /usr/lib/udev/rules.d/
+install -vm644 $(find ../rules.d/*.rules \
+                      -not -name '*power-switch*') /usr/lib/udev/rules.d/
+install -vm644 hwdb.d/*  ../hwdb.d/{*.hwdb,README} /usr/lib/udev/hwdb.d/
+install -vm755 $udev_helpers                       /usr/lib/udev
+install -vm644 ../network/99-default.link          /usr/lib/udev/network
+tar -xvf ../../udev-lfs-20230818.tar.xz
+make -f udev-lfs-20230818/Makefile.lfs install
+tar -xf ../../systemd-man-pages-257.3.tar.xz                            \
+    --no-same-owner --strip-components=1                              \
+    -C /usr/share/man --wildcards '*/udev*' '*/libudev*'              \
+                                  '*/systemd.link.5'                  \
+                                  '*/systemd-'{hwdb,udevd.service}.8
+sed 's|systemd/network|udev/network|'                                 \
+    /usr/share/man/man5/systemd.link.5                                \
+  > /usr/share/man/man5/udev.link.5
+sed 's/systemd\(\\\?-\)/udev\1/' /usr/share/man/man8/systemd-hwdb.8   \
+                               > /usr/share/man/man8/udev-hwdb.8
+sed 's|lib.*udevd|sbin/udevd|'                                        \
+    /usr/share/man/man8/systemd-udevd.service.8                       \
+  > /usr/share/man/man8/udevd.8
+rm /usr/share/man/man*/systemd*
+unset udev_helpers
+```
+
+And configure.
+
+```bash
+udev-hwdb update
+```
+
+### Man-DB in LFS {{ id: 'man-db-lfs' }}
+
+The Man-DB package contains a collection of man pages.
+
+Extract, configure, compile and install.
+
+```bash
+tar -xvf man-db-2.13.0.tar.xz
+cd man-db-2.13.0
+./configure --prefix=/usr                         \
+            --docdir=/usr/share/doc/man-db-2.13.0 \
+            --sysconfdir=/etc                     \
+            --disable-setuid                      \
+            --enable-cache-owner=bin              \
+            --with-browser=/usr/bin/lynx          \
+            --with-vgrind=/usr/bin/vgrind         \
+            --with-grap=/usr/bin/grap             \
+            --with-systemdtmpfilesdir=            \
+            --with-systemdsystemunitdir=
+make
+make check
+make install
+```
+
+### Procps-ng in LFS {{ id: 'procps-ng-lfs' }}
+
+The Procps-ng package contains programs for monitoring system processes.
+
+Extract, configure, compile and install.
+
+```bash
+tar -xvf procps-ng-4.0.5.tar.xz
+cd procps-ng-4.0.5
+./configure --prefix=/usr                           \
+            --docdir=/usr/share/doc/procps-ng-4.0.5 \
+            --disable-static                        \
+            --disable-kill                          \
+            --enable-watch8bit
+make
+chown -R tester .
+su tester -c "PATH=$PATH make check"
+make install
+```
+
+### Util-linux in LFS {{ id: 'util-linux-lfs' }}
+
+The Util-linux package contains various programs for manipulating Linux filesystems.
+
+Extract, configure, compile, check and install.
+
+```bash
+tar -xvf util-linux-2.40.4.tar.xz
+cd util-linux-2.40.4
+./configure --bindir=/usr/bin     \
+            --libdir=/usr/lib     \
+            --runstatedir=/run    \
+            --sbindir=/usr/sbin   \
+            --disable-chfn-chsh   \
+            --disable-login       \
+            --disable-nologin     \
+            --disable-su          \
+            --disable-setpriv     \
+            --disable-runuser     \
+            --disable-pylibmount  \
+            --disable-liblastlog2 \
+            --disable-static      \
+            --without-python      \
+            --without-systemd     \
+            --without-systemdsystemunitdir        \
+            ADJTIME_PATH=/var/lib/hwclock/adjtime \
+            --docdir=/usr/share/doc/util-linux-2.40.4
+make
+bash tests/run.sh --srcdir=$PWD --builddir=$PWD
+touch /etc/fstab
+chown -R tester .
+su tester -c "make -k check"
+make install
+```
+
+### E2fsprogs in LFS {{ id: 'e2fsprogs-lfs' }}
+
+The E2fsprogs package contains programs for creating and managing ext2/ext3/ext4 filesystems.
+
+Extract, configure, compile and install.
+
+```bash
+tar -xvf e2fsprogs-1.47.2.tar.gz
+cd e2fsprogs-1.47.2
+mkdir -v build
+cd       build
+../configure --prefix=/usr           \
+             --sysconfdir=/etc       \
+             --enable-elf-shlibs     \
+             --disable-libblkid      \
+             --disable-libuuid       \
+             --disable-uuidd         \
+             --disable-fsck
+make
+make check
+make install
+```
+
+Remove the static libraries and install additional documentation.
+
+```bash
+rm -fv /usr/lib/{libcom_err,libe2p,libext2fs,libss}.a
+gunzip -v /usr/share/info/libext2fs.info.gz
+install-info --dir-file=/usr/share/info/dir /usr/share/info/libext2fs.info
+```
+
+And configure the program.
+
+```bash
+sed 's/metadata_csum_seed,//' -i /etc/mke2fs.conf
+```
+
+### Sysklogd in LFS {{ id: 'sysklogd-lfs' }}
+
+The Sysklogd package contains programs for loggin system messages, such as those emitted by the kernel when
+unusual things happen.
+
+Extract, configure, compile and install.
+
+```bash
+tar -xvf sysklogd-2.7.0.tar.gz
+cd sysklogd-2.7.0
+./configure --prefix=/usr      \
+            --sysconfdir=/etc  \
+            --runstatedir=/run \
+            --without-logger   \
+            --disable-static   \
+            --docdir=/usr/share/doc/sysklogd-2.7.0
+make
+make install
+```
+
+And configure the program.
+
+```bash
+cat > /etc/syslog.conf << "EOF"
+# Begin /etc/syslog.conf
+
+auth,authpriv.* -/var/log/auth.log
+*.*;auth,authpriv.none -/var/log/sys.log
+daemon.* -/var/log/daemon.log
+kern.* -/var/log/kern.log
+mail.* -/var/log/mail.log
+user.* -/var/log/user.log
+*.emerg *
+
+# Do not open any internet ports.
+secure_mode 2
+
+# End /etc/syslog.conf
+EOF
+```
+
+### Sysvinit in LFS {{ id: 'sysvinit-lfs' }}
+
+The SysVinit package conatins a program fro controlling the startup, running, and shutdown of the system.
+
+Extract, apply the patch and compile.
+
+```bash
+tar -xvf sysvinit-3.14.tar.xz
+cd sysvinit-3.14
+patch -Np1 -i ../sysvinit-3.14-consolidated-1.patch
+make
+make install
+```
