@@ -100,7 +100,7 @@ export function NavBar({ sections }: Props) {
                       aria-hidden="true"
                       className="font-mono text-sm text-[#00ff00]"
                     >
-                      {(mobileActiveIndex + 1).toString().padStart(2, '0')}
+                      {(mobileActiveIndex).toString().padStart(2, '0')}
                     </span>
                     <span className="ml-4 text-base font-medium text-white">
                       {sections[mobileActiveIndex].title}
@@ -136,7 +136,7 @@ export function NavBar({ sections }: Props) {
                     aria-hidden="true"
                     className="font-mono text-sm text-white"
                   >
-                    {(sectionIndex + 1).toString().padStart(2, '0')}
+                    {(sectionIndex).toString().padStart(2, '0')}
                   </span>
                   <span className="ml-4 text-base font-medium text-neutral-500">
                     {section.title}
@@ -152,14 +152,14 @@ export function NavBar({ sections }: Props) {
         <div className="hidden shadow-sm sm:flex sm:h-32 sm:justify-center sm:border-b sm:border-white/10 sm:shadow-white/5 sm:[@supports(backdrop-filter:blur(0))]:bg-transparent sm:[@supports(backdrop-filter:blur(0))]:backdrop-blur-sm">
           <ol
             role="list"
-            className="mb-[-2px] grid auto-cols-[minmax(0,15rem)] grid-flow-col text-base font-medium text-white [counter-reset:section]"
+            className="mb-[-2px] grid auto-cols-[minmax(0,15rem)] grid-flow-col text-base font-medium text-white [counter-reset:section_-1]"
           >
             {sections.map((section, sectionIndex) => (
               <li key={section.id} className="flex [counter-increment:section]">
                 <a
                   href={`#${section.id}`}
                   className={clsx(
-                    'flex w-full flex-col items-center justify-center border-b-2 before:mb-2 before:font-mono before:text-sm before:content-[counter(section,decimal-leading-zero)]',
+                    'flex w-full flex-col text-center items-center justify-center border-b-2 before:mb-2 before:font-mono before:text-sm before:content-[counter(section,decimal-leading-zero)]',
                     sectionIndex === activeIndex
                       ? 'border-[#00ff00] bg-black/30 text-[#00ff00] before:text-[#00ff00]'
                       : 'border-transparent before:text-neutral-500 hover:bg-white/5 hover:before:text-[#00ff00]',
