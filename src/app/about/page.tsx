@@ -23,6 +23,7 @@ import imageLeslieAlexander from '@/images/team/leslie-alexander.jpg'
 import imageMichaelFoster from '@/images/team/michael-foster.jpg'
 import imageWhitneyFrancis from '@/images/team/whitney-francis.jpg'
 import { loadArticles } from '@/lib/mdx'
+import { Button } from '@/components/Button'
 
 function Culture() {
   return (
@@ -195,23 +196,19 @@ export default async function About() {
         {/* <p>fascinated by the deep understanding of computers.</p> */}
         <div className="mt-10 max-w-2xl space-y-6 text-base">
           <p>
-            Software engineering student, specialized in UNIX based systems,
-            languages such as Python, JavaScript/TypeScript, Bash, C++.
-            knowledge in version control with Git, implementation of automated
-            pipelines (CI/CD) with Github Actions, project management with
-            Github Projects , Azure DevOps and Jira, database design and
-            microservices development.
+          Software Engineering student with more than 2 years of IT experience, oriented towards software development and process automation. He has a strong background in UNIX systems, programming and pipeline development (CI/CD) with a growing focus on cybersecurity. He has worked in environments requiring version control, automated testing, secrets management and secure deployments. Interested in areas such as offensive security, vulnerability analysis and DevSecOps.
           </p>
         </div>
       </PageIntro>
-      <Container className="mt-16">
-        <StatList>
+
+      {/* <Container className="mt-16">
+        
           <StatListItem
             value="8 Bytes"
             label="can represent 256 different values."
           />
         </StatList>
-      </Container>
+      </Container> */}
 
       {/* <Culture /> */}
 
