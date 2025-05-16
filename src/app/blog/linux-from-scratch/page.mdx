@@ -1,18 +1,29 @@
 import { SectionHeading } from '@/components/SectionHeading'
 import { TableOfContents } from '@/components/TableOfContent'
+
 export const article = {
   date: '2025-06-05',
   title: 'Linux from scratch',
   tags: [
-    'Linux',
-    'Operative Systems',
-    'Virtual Kernel',
-    'Bootloaders',
-    'Filesystem',
-    'Virtualization',
-    'Software',
-    'Partitioning',
-    'Incomplete',
+  'Linux',
+  'Operating Systems', 
+  'System Administration',
+  'Virtualization',
+  'VMware',
+  'Debian',
+  'LFS',
+  'Command Line',
+  'Shell Scripting',
+  'System Programming',
+  'Kernel',
+  'GNU/Linux',
+  'Build Systems',
+  'Software Development',
+  'System Tools',
+  'Package Management',
+  'Bootloader',
+  'File Systems',
+  'System Configuration'
   ],
   description:
     'This guide will take you through the step-by-step process of building your own Linux distribution from the ground up, known as "Linux From Scratch" (LFS).',
@@ -60,7 +71,6 @@ export const sections = [
           { id: 'install-lfs-deps.sh', title: 'install-lfs-deps.sh' },
         ],
       },
-      { id: 'creating-snapshot', title: 'Creating snapshot' },
       {
         id: 'partitioning',
         title: 'Partitioning',
@@ -246,10 +256,31 @@ export const sections = [
         { id: 'e2fsprogs-lfs', title: 'E2fsprogs in LFS' },
         { id: 'sysklogd-lfs', title: 'Sysklogd in LFS' },
         { id: 'sysvinit-lfs', title: 'Sysvinit in LFS' },
+        { id: 'stripping-and-cleanup', title: 'Stripping and Cleaning Up' },
       ] },
-      { id: 'stripping-and-cleanup', title: 'Stripping and Cleaning Up' },
+      { id: 'system-configuration', title: 'System Configuration', child: [
+        { id: 'install-lfs-bootscripts', title: 'Install LFS-Bootscripts' },
+        { id: 'general-network-configuration', title: 'General Network Configuration' },
+        { id: 'system-v-bootscript-configuration', title: 'System V Bootscript Configuration' },
+        { id: 'configure-the-system-clock', title: 'Configure the System Clock' },
+        { id: 'configure-the-rc-site', title: 'Configure the rc.site' },
+        { id: 'configure-system-locale', title: 'Configure System Locale' },
+        { id: 'creating-the-inputrc-file', title: 'Creating the inputrc file' },
+        { id: 'creating-the-shells-file', title: 'Creating the shells file' },
+      ] },
+      { id: 'making-the-lfs-bootable', title: 'Making the LFS bootable' },
+      // { id: 'making-the-lfs-bootable', title: 'Making the LFS bootable', child: [
+        // { id: 'creating-the-fstab-file', title: 'Creating the fstab file' },
+        // { id: 'kernel-installation', title: 'Kernel Installation' },
+        // { id: 'Using GRUB to set up the boot process', title: 'Using GRUB to set up the boot process (UEFI)', child: [
+        //   { id: 'install-dosfstools', title: 'Install dosfstools' },
+        //   { id: 'create-an-emergency-rescue-disk', title: 'Create an emergency rescue disk' },
+        // ] },
+      // ] },
+     
     ],
   },
+  
 ]
 
 export const metadata = {
@@ -271,6 +302,31 @@ export const metadata = {
 </SectionHeading>
 
 ### Background {{ id: 'background' }}
+
+Linux From Scratch (LFS) is a project that provides you with step-by-step instructions for building your own custom Linux system, entirely from source code. But why would anyone want to build their own Linux distribution from scratch when there are hundreds of ready-to-use distributions available?
+
+The primary purpose of LFS is educational. By building a Linux system from the ground up, you gain an intimate understanding of how Linux systems work internally. You'll learn:
+
+- How the different components of a Linux system fit together
+- How the boot process works
+- How system libraries and utilities depend on each other
+- How to compile and configure software packages
+- How to troubleshoot system-level issues effectively
+
+This deep understanding is invaluable for system administrators, Linux enthusiasts, and anyone interested in operating system internals. While the process is time-consuming and challenging, the knowledge gained is well worth the effort.
+
+LFS also offers complete control over your system. You decide exactly which packages to include, how they're configured, and how the system is structured. This level of customization can result in a system that's:
+
+- Optimized for your specific hardware
+- Stripped of unnecessary components
+- More secure due to reduced attack surface
+- Tailored to your exact needs
+
+This guide will walk you through the entire process, from preparing your host system to configuring the final bootable system. While it may seem daunting at first, we'll break it down into manageable steps, each building upon the previous ones.
+
+Link to the official guide: [Linux From Scratch](https://www.linuxfromscratch.org/lfs/view/stable/index.html)
+
+
 ### Recomendations {{ id: 'recomendations' }}
 
 #### How create a Snapshot (VMWare Workstation) {{ id: 'how-create-a-snapshot' }}
@@ -4371,3 +4427,333 @@ patch -Np1 -i ../sysvinit-3.14-consolidated-1.patch
 make
 make install
 ```
+
+### Stripping and Cleaning Up {{ id: 'stripping-and-cleanup' }}
+
+This is a one of the final phases in the build of a LFS system, from now
+we will start mostly with the configuration, but first, we'll reduce the size of 
+everything we carry a little bit.
+
+#### Stripping
+
+With this proccess, we will remove the debugging symbols from the libraries and binaries and some
+unnecessary symbol table entries.
+
+Before execute the following commands, make sure that you have a backup of the files.
+
+
+```bash
+save_usrlib="$(cd /usr/lib; ls ld-linux*[^g])
+             libc.so.6
+             libthread_db.so.1
+             libquadmath.so.0.0.0
+             libstdc++.so.6.0.33
+             libitm.so.1.0.0
+             libatomic.so.1.2.0"
+
+cd /usr/lib
+
+for LIB in $save_usrlib; do
+    objcopy --only-keep-debug --compress-debug-sections=zlib $LIB $LIB.dbg
+    cp $LIB /tmp/$LIB
+    strip --strip-unneeded /tmp/$LIB
+    objcopy --add-gnu-debuglink=$LIB.dbg /tmp/$LIB
+    install -vm755 /tmp/$LIB /usr/lib
+    rm /tmp/$LIB
+done
+
+online_usrbin="bash find strip"
+online_usrlib="libbfd-2.44.so
+               libsframe.so.1.0.0
+               libhistory.so.8.2
+               libncursesw.so.6.5
+               libm.so.6
+               libreadline.so.8.2
+               libz.so.1.3.1
+               libzstd.so.1.5.7
+               $(cd /usr/lib; find libnss*.so* -type f)"
+
+for BIN in $online_usrbin; do
+    cp /usr/bin/$BIN /tmp/$BIN
+    strip --strip-unneeded /tmp/$BIN
+    install -vm755 /tmp/$BIN /usr/bin
+    rm /tmp/$BIN
+done
+
+for LIB in $online_usrlib; do
+    cp /usr/lib/$LIB /tmp/$LIB
+    strip --strip-unneeded /tmp/$LIB
+    install -vm755 /tmp/$LIB /usr/lib
+    rm /tmp/$LIB
+done
+
+for i in $(find /usr/lib -type f -name \*.so* ! -name \*dbg) \
+         $(find /usr/lib -type f -name \*.a)                 \
+         $(find /usr/{bin,sbin,libexec} -type f); do
+    case "$online_usrbin $online_usrlib $save_usrlib" in
+        *$(basename $i)* )
+            ;;
+        * ) strip --strip-unneeded $i
+            ;;
+    esac
+done
+
+unset BIN LIB save_usrlib online_usrbin online_usrlib
+```
+
+A large number of files will be flagged as errors because their file format is not recognized. 
+These warnings can be safely ignored. They indicate that those files are scripts, not binaries. 
+
+#### Cleaning Up
+
+And finally, clean up some extra files.
+
+```bash
+rm -rf /tmp/{*,.*}
+find /usr/lib /usr/libexec -name \*.la -delete
+find /usr -depth -name $(uname -m)-lfs-linux-gnu\* | xargs rm -rf
+userdel -r tester
+```
+
+## System configuration {{ id: 'system-configuration' }}
+
+### Install LFS-Bootscripts {{ id: 'install-lfs-bootscripts' }}
+
+The LFS-Bootscripts package contains a set of script to start/stop the LFS system at bootup/shutdown.
+
+Extract and install.
+
+```bash
+tar -xvf lfs-bootscripts-20240825.tar.xz
+cd lfs-bootscripts-20240825
+make install
+```
+
+### General Network Configuration {{ id: 'general-network-configuration' }}
+
+First you should check what's your network interface name.
+
+```bash
+ip link show
+```
+
+![Network Interface Name](/src/app/blog/linux-from-scratch/images/network_interface.png)
+
+In my case, is `ens33`.
+
+So let's create a simple configuration with a static IP address.
+
+```bash
+cd /etc/sysconfig/
+cat > ifconfig.ens33 << "EOF"
+ONBOOT=yes
+IFACE=ens33
+SERVICE=ipv4-static
+IP=192.168.1.2
+GATEWAY=192.168.1.1
+PREFIX=24
+BROADCAST=192.168.1.255
+EOF
+```
+
+Now, let's create the `/etc/resolv.conf` file.
+
+```bash
+cat > /etc/resolv.conf << "EOF"
+# Begin /etc/resolv.conf
+
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+
+# End /etc/resolv.conf
+EOF
+```
+
+Configure the hostname.
+
+```bash
+echo "entr0phy4" > /etc/hostname
+```
+
+And `/etc/hosts` file.
+
+```bash
+cat > /etc/hosts << "EOF"
+# Begin /etc/hosts
+
+127.0.0.1 localhost
+127.0.1.1 entr0phy4 entr0phy4
+192.168.1.2 entr0phy4 entr0phy4
+::1       localhost ip6-localhost ip6-loopback
+ff02::1   ip6-allnodes
+ff02::2   ip6-allrouters
+
+# End /etc/hosts
+EOF
+```
+
+## System V Bootscript configuration {{ id: 'system-v-bootscript-configuration' }}
+
+The first program should run at kernel initialization is `init`. This reads the `/etc/inittab`, let's create it.
+
+```bash
+cat > /etc/inittab << "EOF"
+# Begin /etc/inittab
+
+id:3:initdefault:
+
+si::sysinit:/etc/rc.d/init.d/rc S
+
+l0:0:wait:/etc/rc.d/init.d/rc 0
+l1:S1:wait:/etc/rc.d/init.d/rc 1
+l2:2:wait:/etc/rc.d/init.d/rc 2
+l3:3:wait:/etc/rc.d/init.d/rc 3
+l4:4:wait:/etc/rc.d/init.d/rc 4
+l5:5:wait:/etc/rc.d/init.d/rc 5
+l6:6:wait:/etc/rc.d/init.d/rc 6
+
+ca:12345:ctrlaltdel:/sbin/shutdown -t1 -a -r now
+
+su:S06:once:/sbin/sulogin
+s1:1:respawn:/sbin/sulogin
+
+1:2345:respawn:/sbin/agetty --noclear tty1 9600
+2:2345:respawn:/sbin/agetty tty2 9600
+3:2345:respawn:/sbin/agetty tty3 9600
+4:2345:respawn:/sbin/agetty tty4 9600
+5:2345:respawn:/sbin/agetty tty5 9600
+6:2345:respawn:/sbin/agetty tty6 9600
+
+# End /etc/inittab
+EOF
+```
+
+### Configure the system clock {{ id: 'configure-the-system-clock' }}
+
+We need create a new file `/etc/sysconfig/clock`.
+
+```bash
+cat > /etc/sysconfig/clock << "EOF"
+# Begin /etc/sysconfig/clock
+
+UTC=1
+
+# Set this to any options you might need to give to hwclock,
+# such as machine hardware clock type for Alphas.
+CLOCKPARAMS=
+
+# End /etc/sysconfig/clock
+EOF
+```
+
+### Configure the rc.site {{ id: 'configure-the-rc-site' }}
+
+We going to set a variable `SYSKLOGD_PARMS` in file `/etc/sysconfig/rc.site` to a null value.
+
+```bash
+SYSKLOGD_PARMS=
+```
+
+and change the hostname.
+
+```bash
+HOSTNAME=entr0phy4
+```
+
+### Configure system locale {{ id: 'configure-system-locale' }}
+
+If you need list all the locales can use:
+
+```bash
+locale -a
+```
+
+After find the locale you want, type:
+
+```bash
+LC_ALL=en_US.utf8 locale charmap
+LC_ALL=en_US.utf8 locale language
+LC_ALL=en_US.utf8 locale charmap
+LC_ALL=en_US.utf8 locale int_curr_symbol
+LC_ALL=en_US.utf8 locale int_prefix
+```
+
+And check not found errors.
+
+```bash
+cat > /etc/locale.conf << "EOF"
+LANG=en_US.utf8
+EOF
+```
+
+### Creating the inputrc file {{ id: 'creating-the-inputrc-file' }}
+
+the file `/etc/inputrc` provides editing capabilities while the user is entering a line from the terminal. 
+It works by translating keyboard inputs into specific actions. 
+Readline is used by bash and most other shells as well as many other applications. 
+
+```bash
+cat > /etc/inputrc << "EOF"
+# Begin /etc/inputrc
+# Modified by Chris Lynn <roryo@roryo.dynup.net>
+
+# Allow the command prompt to wrap to the next line
+set horizontal-scroll-mode Off
+
+# Enable 8-bit input
+set meta-flag On
+set input-meta On
+
+# Turns off 8th bit stripping
+set convert-meta Off
+
+# Keep the 8th bit for display
+set output-meta On
+
+# none, visible or audible
+set bell-style none
+
+# All of the following map the escape sequence of the value
+# contained in the 1st argument to the readline specific functions
+"\eOd": backward-word
+"\eOc": forward-word
+
+# for linux console
+"\e[1~": beginning-of-line
+"\e[4~": end-of-line
+"\e[5~": beginning-of-history
+"\e[6~": end-of-history
+"\e[3~": delete-char
+"\e[2~": quoted-insert
+
+# for xterm
+"\eOH": beginning-of-line
+"\eOF": end-of-line
+
+# for Konsole
+"\e[H": beginning-of-line
+"\e[F": end-of-line
+
+# End /etc/inputrc
+EOF
+```
+
+
+### Creating the /etc/shells file {{ id: 'creating-the-etc-shells-file' }}
+
+The `shells` file contains a list of login shells on the system.
+
+```bash
+cat > /etc/shells << "EOF"
+# Begin /etc/shells
+
+/bin/sh
+/bin/bash
+
+# End /etc/shells
+EOF
+```
+
+## Making the LFS bootable {{ id: 'making-the-lfs-bootable' }}
+
+In progress...
