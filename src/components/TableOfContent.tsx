@@ -7,6 +7,9 @@ import {
 import { SectionHeading } from '@/components/SectionHeading'
 import { Section } from '@/lib/mdx'
 import { Link } from './Link'
+import { Badge } from './Badge'
+
+const sectionInProgress = ['making-the-lfs-bootable']
 
 function renderSectionItems(section: Section, parentIndex: string) {
   return (
@@ -23,12 +26,13 @@ function renderSectionItems(section: Section, parentIndex: string) {
             aria-label={`${title} on page ${index}`}
           >
             <div className="flex justify-between">
+
               <Link
                 href={'#' + id}
                 className="font-medium text-white"
                 aria-hidden="true"
               >
-                {title}
+                {title} {sectionInProgress.includes(id) && <Badge color='red'>In progress</Badge>}
               </Link>
               <span
                 className="font-mono text-[#00ff00]"
@@ -36,6 +40,7 @@ function renderSectionItems(section: Section, parentIndex: string) {
               >
                 {currentIndex}
               </span>
+
             </div>
             {child && (
               <div className="ml-6">
