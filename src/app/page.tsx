@@ -1,36 +1,18 @@
 import { type Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-
-import { ContactSection } from '@/components/ContactSection'
 import { Container } from '@/components/Container'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
 import { List, ListItem } from '@/components/List'
 import { SectionIntro } from '@/components/SectionIntro'
 import { StylizedImage } from '@/components/StylizedImage'
-import { Testimonial } from '@/components/Testimonial'
-import logoBrightPath from '@/images/clients/bright-path/logo-light.svg'
-import logoFamilyFund from '@/images/clients/devzeros-sas/logo-light.svg'
-import logoGreenLife from '@/images/clients/green-life/logo-light.svg'
-import logoHomeWork from '@/images/clients/home-work/logo-light.svg'
-import logoMailSmirk from '@/images/clients/mail-smirk/logo-light.svg'
-import logoNorthAdventures from '@/images/clients/north-adventures/logo-light.svg'
-import logoPhobiaDark from '@/images/clients/phobia/logo-dark.svg'
-import logoPhobiaLight from '@/images/clients/phobia/logo-light.svg'
-import logoUnseal from '@/images/clients/unseal/logo-light.svg'
-import imageLaptop from '@/images/laptop.jpg'
+import logoAleron from '@/images/aleron/logo_color.png'
 import { type CaseStudy, type MDXEntry, loadCaseStudies } from '@/lib/mdx'
 import { RenderTags } from '@/lib/renderTags'
+import { GlowingEffect } from '@/components/GlowingEffect'
 
 const clients = [
-  ['Phobia', logoPhobiaLight],
-  ['Family Fund', logoFamilyFund],
-  ['Unseal', logoUnseal],
-  ['Mail Smirk', logoMailSmirk],
-  ['Home Work', logoHomeWork],
-  ['Green Life', logoGreenLife],
-  ['Bright Path', logoBrightPath],
-  ['North Adventures', logoNorthAdventures],
+  ['Alerón_producciones', logoAleron],
 ]
 
 function Clients() {
@@ -39,7 +21,7 @@ function Clients() {
       <Container>
         <FadeIn className="flex items-center gap-x-8">
           <h2 className="text-center font-display text-sm font-semibold tracking-wider text-white sm:text-left">
-            We’ve worked with hundreds of amazing people
+            I&apos;ve worked with amazing people
           </h2>
           <div className="h-px flex-auto bg-neutral-800" />
         </FadeIn>
@@ -69,26 +51,25 @@ function CaseStudies({
 }) {
   return (
     <>
-      <SectionIntro
-        title="Mind is a maze of twisty little passages, all alike."
-        className="mt-24 sm:mt-32 lg:mt-40"
-      >
-        <p className="text-right font-thin italic">
-          Colossal Cave Adventure - 1976
-        </p>
-      </SectionIntro>
       <Container className="mt-16">
+
         <FadeInStagger className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           {caseStudies.map((caseStudy) => (
             <FadeIn key={caseStudy.href} className="flex">
               <article className="relative flex w-full flex-col rounded-3xl p-6 ring-1 ring-neutral-400/5 transition hover:border-[#00ff00] sm:p-8">
+        <GlowingEffect
+          spread={40}
+          glow={true}
+          disabled={false}
+          proximity={64}
+          inactiveZone={0.01}
+        />
                 <h3>
                   <Link href={caseStudy.href}>
                     <span className="absolute inset-0 rounded-3xl" />
                     <Image
                       src={caseStudy.logo}
                       alt={caseStudy.client}
-                      className="h-16 w-16"
                       unoptimized
                     />
                   </Link>
@@ -218,9 +199,9 @@ export default async function Home() {
         </p>
       </SectionIntro>
 
-      {/* <Clients /> */}
+      <Clients />
 
-      {/* <CaseStudies caseStudies={caseStudies} />
+      <CaseStudies caseStudies={caseStudies} />
 
       {/* <Testimonial */}
       {/*   className="mt-24 sm:mt-32 lg:mt-40" */}
