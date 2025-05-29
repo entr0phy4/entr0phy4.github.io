@@ -1,0 +1,139 @@
+export const article = {
+  date: '2025-05-05',
+  title: 'Machine: Stacked',
+  tags: ['Incomplete'],
+  description:
+    'Stacked is an insane difficulty Linux machine that focuses on LocalStack / AWS exploitation.',
+  author: {
+    name: '@Entr0phy4 (David Agámez)',
+    role: 'Hack The Box',
+  },
+}
+
+export const sections = [
+  { id: 'enumeration', title: 'Enumeration' },
+  { id: 'exploitation', title: 'Explotation' },
+  { id: 'lateral-movements', title: 'Lateral movements' },
+  { id: 'privilege-escalation', title: 'Privilege escalation' },
+]
+
+export const metadata = {
+  title: article.title,
+  description: article.description,
+}
+
+## Stacked
+
+```js
+target = {
+  name: 'Stacked',
+  ip_address: '10.10.11.112',
+  difficult: 'Insane',
+  os: 'Linux',
+}
+```
+
+---
+
+## Enumeration {{ id: 'enumeration' }}
+
+This is our [Nmap](https://nmap.org/) report:
+
+```bash
+PORT     STATE SERVICE     VERSION
+22/tcp   open  ssh         OpenSSH 8.2p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey:
+|   3072 12:8f:2b:60:bc:21:bd:db:cb:13:02:03:ef:59:36:a5 (RSA)
+|   256 af:f3:1a:6a:e7:13:a9:c0:25:32:d0:2c:be:59:33:e4 (ECDSA)
+|_  256 39:50:d5:79:cd:0e:f0:24:d3:2c:f4:23:ce:d2:a6:f2 (ED25519)
+80/tcp   open  http        Apache httpd 2.4.41
+|_http-server-header: Apache/2.4.41 (Ubuntu)
+|_http-title: Did not follow redirect to http://stacked.htb/
+2376/tcp open  ssl/docker?
+| ssl-cert: Subject: commonName=stacked
+| Subject Alternative Name: DNS:localhost, DNS:stacked, IP Address:0.0.0.0, IP Address:127.0.0.1, IP Address:172.17.0.1
+| Not valid before: 2022-08-17T15:41:56
+|_Not valid after:  2025-05-12T15:41:56
+Service Info: Host: stacked.htb; OS: Linux; CPE: cpe:/o:linux:linux_kernel
+```
+
+Before inspecting port 80 we could try to check the ssl certificate to see if we find possible subdomains, but we get nothing.
+
+Then, port 80 are trying redirect us to `stacked.htb`. We need to look at that direction in our `/etc/hosts`
+
+```bash
+# Static table lookup for hostnames.
+# See hosts(5) for details.
+
+127.0.0.1 localhost
+
+10.10.11.112 stacked.htb
+```
+
+Now, by visiting the web in our browser we get a particular countdown.
+
+![Coundown](/src/app/blog/stacked/countdown.png)
+
+But the email field is not vulnerable, so there is little we can do here.
+
+Attempted fuzzing to list existing directories but didn't find the big thing, so we tried fuzzing subdomains with [ffuf](https://github.com/ffuf/ffuf).
+
+```bash
+ffuf -w subdomains-top1million-5000.txt -H "Host: FUZZ.stacked.htb" -u http://stacked.htb/
+```
+
+![ffuf report with much status 302](/src/app/blog/stacked/ffuf_subdomains_fails.png)
+
+But we get a lot of garbage, so we filter by number of words adding `-fw 18`.
+
+```bash
+portfolio               [Status: 200, Size: 30268, Words: 11467, Lines: 445, Duration: 84ms]
+```
+
+and we get `portfolio`, so add it `/etc/hosts`.
+
+```bash
+10.10.11.112 stacked.htb portfolio.stacked.htb
+```
+
+So visiting also, we get:
+
+![Porfolio localstack development](/src/app/blog/stacked/portfolio.png)
+
+```bash
+version: "3.3"
+
+services:
+  localstack:
+    container_name: "${LOCALSTACK_DOCKER_NAME-localstack_main}"
+    image: localstack/localstack-full:0.12.6
+    network_mode: bridge
+    ports:
+      - "127.0.0.1:443:443"
+      - "127.0.0.1:4566:4566"
+      - "127.0.0.1:4571:4571"
+      - "127.0.0.1:${PORT_WEB_UI-8080}:${PORT_WEB_UI-8080}"
+    environment:
+      - SERVICES=serverless
+      - DEBUG=1
+      - DATA_DIR=/var/localstack/data
+      - PORT_WEB_UI=${PORT_WEB_UI- }
+      - LAMBDA_EXECUTOR=${LAMBDA_EXECUTOR- }
+      - LOCALSTACK_API_KEY=${LOCALSTACK_API_KEY- }
+      - KINESIS_ERROR_PROBABILITY=${KINESIS_ERROR_PROBABILITY- }
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - HOST_TMP_FOLDER="/tmp/localstack"
+    volumes:
+      - "/tmp/localstack:/tmp/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+```
+
+## Exploitation {{ id: 'exploitation' }}
+
+---
+
+## Lateral movements {{ id: 'lateral-movements'}}
+
+---
+
+## Privilege escalation {{ id: 'privilege-escalation' }}
