@@ -1,0 +1,51 @@
+import logo from '../../../images/aleron/logo_white.png'
+import imageHero from './hero.png'
+import imageLuisAgamez from './jenny-wilson.jpg'
+import { Badge } from '@/components/Badge'
+
+export const caseStudy = {
+  client: 'Alerón producciones',
+  title: 'Pónle un alerón a tus ideas.',
+  description: '',
+  summary: ['', ''],
+  logo,
+  image: { src: imageHero },
+  date: '2025-06',
+  service: 'App development',
+  testimonial: {
+    author: { name: 'Luis Agámez', role: 'CEO of Alerón producciones' },
+    content:
+      'The team at Studio went above and beyond with our onboarding, even finding a way to access the user’s microphone without triggering one of those annoying permission dialogs.',
+  },
+}
+
+export const metadata = {
+  title: `${caseStudy.client} Case Study`,
+  description: caseStudy.description,
+}
+
+## Overview
+
+
+
+## What we did
+
+
+<TagList>
+  <Badge color="random">App development</Badge>
+  <Badge color="random">Design</Badge>
+</TagList>
+
+<Blockquote
+  author={{ name: 'Luis Agámez', role: 'CEO of Alerón producciones' }}
+  image={{ src: imageLuisAgamez }}
+>
+Estoy contento con la vaina men.
+</Blockquote>
+
+<StatList>
+  <StatListItem value="34%" label="Fewer transactions" />
+  <StatListItem value="10%" label="Slower transactions" />
+  <StatListItem value="1000ms" label="Transaction latency" />
+  <StatListItem value="3" label="Active nodes" />
+</StatList>
