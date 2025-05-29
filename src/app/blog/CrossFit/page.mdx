@@ -1,29 +1,29 @@
 export const article = {
   date: '2025-05-04',
-  title: 'Machine: CrossFit',
+  title: 'machine: crossfit',
   tags: [
-    'XSS Injection',
-    'CSRF bypass',
-    'Linux',
-    'Cracking hashes',
-    'User pivoting',
-    'Binary analysis',
-    'FTP enumeration',
-    'Abuse seed rand',
+    'xss injection',
+    'csrf bypass',
+    'linux',
+    'cracking hashes',
+    'user pivoting',
+    'binary analysis',
+    'ftp enumeration',
+    'abuse seed rand',
   ],
   description:
-    'CrossFit is an insane difficulty Linux box featuring an Apache server that hosts the website of a fictional',
+    'crossfit is an insane difficulty linux box featuring an apache server that hosts the website of a fictional',
   author: {
-    name: '@Entr0phy4 (David Agámez)',
-    role: 'Hack The Box',
+    name: '@entr0phy4 (david agámez)',
+    role: 'hack the box',
   },
 }
 
 export const sections = [
-  { id: 'enumeration', title: 'Enumeration' },
-  { id: 'exploitation', title: 'Explotation' },
-  { id: 'lateral-movements', title: 'Lateral movements' },
-  { id: 'privilege-escalation', title: 'Privilege escalation' },
+  { id: 'enumeration', title: 'enumeration' },
+  { id: 'exploitation', title: 'explotation' },
+  { id: 'lateral-movements', title: 'lateral movements' },
+  { id: 'privilege-escalation', title: 'privilege escalation' },
 ]
 
 export const metadata = {
@@ -31,22 +31,22 @@ export const metadata = {
   description: article.description,
 }
 
-## Crossfit
+## crossfit
 
 ```js
 target = {
-  name: 'CrossFit',
+  name: 'crossfit',
   ip_address: '10.10.10.208',
-  difficult: 'Insane',
-  os: 'Linux',
+  difficult: 'insane',
+  os: 'linux',
 }
 ```
 
 ---
 
-### Enumeration {{ id: 'enumeration' }}
+### enumeration {{ id: 'enumeration' }}
 
-With the first [Nmap](https://nmap.org/) scan we try to find out the open port of the target:
+with the first [nmap](https://nmap.org/) scan we try to find out the open port of the target:
 
 ```bash
 $ nmap -p- -vvv -Pn -n --min-rate 5000 10.10.10.208
