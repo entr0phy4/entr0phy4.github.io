@@ -34,11 +34,11 @@ function BlockquoteWithImage({
           className="h-12 w-12 object-cover grayscale sm:aspect-7/9 sm:h-auto sm:w-full"
         />
       </div>
-      <figcaption className="text-sm text-neutral-950 sm:col-span-7 sm:row-start-3 sm:text-base">
+      <figcaption className="text-sm text-[#00ff00] sm:col-span-7 sm:row-start-3 sm:text-base">
         <span className="font-semibold">{author.name}</span>
         <span className="hidden font-semibold sm:inline">, </span>
         <br className="sm:hidden" />
-        <span className="sm:font-semibold">{author.role}</span>
+        <span className="sm:font-semibold text-white">{author.role}</span>
       </figcaption>
     </figure>
   )
