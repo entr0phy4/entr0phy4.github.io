@@ -3,8 +3,8 @@
   font-size: var(--text-xl);
   line-height: var(--text-xl--line-height);
 
-  --shiki-color-text: var(--color-white);
-  --shiki-color-background: var(--color-neutral-950);
+  --shiki-foreground: var(--color-white);
+  --shiki-background: var(--color-neutral-950);
   --shiki-token-constant: var(--color-neutral-300);
   --shiki-token-string: var(--color-neutral-400);
   --shiki-token-comment: var(--color-neutral-500);
