@@ -8,6 +8,7 @@ import {
   useRef,
   useState,
 } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import clsx from 'clsx'
@@ -20,6 +21,7 @@ import { GridPattern } from '@/components/GridPattern'
 import { Logo, Logomark } from '@/components/Logo'
 import { Offices } from '@/components/Offices'
 import { SocialMedia } from '@/components/SocialMedia'
+import imageDavidAgamez from '@/images/david_agamez.png'
 
 const RootLayoutContext = createContext<{
   logoHovered: boolean
@@ -158,6 +160,8 @@ function Navigation() {
 }
 
 function RootLayoutInner({ children }: { children: React.ReactNode }) {
+  let pathname = usePathname()
+  let isHome = pathname === '/'
   let panelId = useId()
   let [expanded, setExpanded] = useState(false)
   let openRef = useRef<React.ElementRef<'button'>>(null)
@@ -267,7 +271,27 @@ function RootLayoutInner({ children }: { children: React.ReactNode }) {
             interactive
           />
 
-          <main className="w-full flex-auto">{children}</main>
+          <main className="relative w-full flex-auto">
+            {isHome && (
+              <>
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute -top-24 right-24 -z-10 h-[calc(100%+10rem)] w-[62%] sm:-top-32 sm:right-28 sm:h-[calc(100%+14rem)] sm:w-[55%] lg:-top-40 lg:right-32 lg:h-[90dvh]"
+                >
+                  <Image
+                    src={imageDavidAgamez}
+                    alt=""
+                    fill
+                    priority
+                    className="object-contain object-right-top opacity-40 sm:opacity-50"
+                    sizes="(max-width: 640px) 62vw, 55vw"
+                  />
+                </div>
+                <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-r from-black from-35% via-black/60 to-transparent" />
+              </>
+            )}
+            <div className="relative">{children}</div>
+          </main>
 
           <Footer />
         </motion.div>

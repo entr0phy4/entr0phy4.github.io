@@ -2,6 +2,7 @@ import { type Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 
+import { ColombiaText } from '@/components/ColombiaText'
 import { ContactSection } from '@/components/ContactSection'
 import { Container } from '@/components/Container'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
@@ -181,33 +182,42 @@ export default async function Home() {
 
   return (
     <>
-      <Container className="mt-24 flex sm:mt-32 md:mt-56">
-        <FadeIn className="max-w-3xl">
-          <p className="font-bold text-white lg:text-xl">David Agámez AKA</p>
-          <h1 className="font-display text-5xl font-black tracking-tight [text-wrap:balance] text-[#00FF00] uppercase sm:text-7xl lg:text-7xl">
-            Entr0phy4
-          </h1>
-          <p className="mt-6 text-xl text-white">
-            Software engineer from <strong>Colombia</strong>.
-          </p>
+      <section className="flex min-h-[calc(100svh-5.75rem)] flex-col justify-between">
+        <Container className="mt-24 flex sm:mt-32 md:mt-56">
+          <FadeIn className="max-w-3xl">
+            <p className="font-bold text-white lg:text-xl">David Agámez AKA</p>
+            <h1 className="font-display text-5xl font-black tracking-tight [text-wrap:balance] text-[#00FF00] uppercase sm:text-7xl lg:text-7xl">
+              Entr0phy4
+            </h1>
+          </FadeIn>
+          <FadeIn className="mt-2">
+            <dd>
+              <RenderTags
+                tags={[
+                  'Hacking',
+                  'Linux',
+                  'Software',
+                  'Hardware',
+                  'Backend',
+                  'Hack The Box',
+                  'Development',
+                  'Frontend',
+                ]}
+              />
+            </dd>
+          </FadeIn>
+        </Container>
+
+        <FadeIn className="mt-auto w-full px-4 pb-6 sm:px-6 sm:pb-8 lg:pb-10">
+          <div className="flex w-full items-end justify-center gap-x-[0.2em] font-display text-[clamp(1rem,6.5vw,9rem)] font-black uppercase leading-none tracking-tighter text-white [font-variation-settings:'wdth'_125]">
+            <span className="flex flex-col items-end leading-[0.82]">
+              <span>Software</span>
+              <span>engineer</span>
+            </span>
+            <ColombiaText />
+          </div>
         </FadeIn>
-        <FadeIn className="mt-2">
-          <dd>
-            <RenderTags
-              tags={[
-                'Hacking',
-                'Linux',
-                'Software',
-                'Hardware',
-                'Backend',
-                'Hack The Box',
-                'Development',
-                'Frontend',
-              ]}
-            />
-          </dd>
-        </FadeIn>
-      </Container>
+      </section>
 
       <SectionIntro
         title="Mind is a maze of twisty little passages, all alike."
